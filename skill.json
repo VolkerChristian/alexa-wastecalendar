@@ -21,6 +21,12 @@
         },
         {
           "eventName": "SKILL_ACCOUNT_LINKED"
+        },
+        {
+          "eventName": "SKILL_ENABLED"
+        },
+        {
+          "eventName": "SKILL_DISABLED"
         }
       ],
       "endpoint": {
