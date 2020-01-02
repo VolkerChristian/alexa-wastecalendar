@@ -10,7 +10,7 @@ const LaunchRequestHandler = {
     handle(handlerInput) {
         const speakOutput = 'Welcome, you can say Hello or Help. Which would you like to try?';
 
-        console.log('~~~~ LaunchRequest handled: ' + JSON.stringify(handlerInput));
+        console.log('~~~~ LaunchRequest handled: ' + JSON.stringify(handlerInput, null, '    '));
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
