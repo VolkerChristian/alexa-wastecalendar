@@ -122,7 +122,7 @@ const AccountLinkedEventHandler = {
     handle(handlerInput) {
         console.log('ALL ' + JSON.stringify(handlerInput));
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
-        console.log('AWS ConsentToken ' + JSON.stringify(handlerInput.requestEnvelope.context.System.user.permissions.consentToken));
+        //    console.log('AWS ConsentToken ' + JSON.stringify(handlerInput.requestEnvelope.context.System.user.permissions.consentToken));
         console.log('OC AccessToken ' + handlerInput.requestEnvelope.context.System.user.accessToken);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('API AccessToken ' + handlerInput.requestEnvelope.context.System.apiAccessToken);
