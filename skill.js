@@ -149,7 +149,7 @@ const SkillDisabledEventHandler = {
         console.log('ALL ' + JSON.stringify(handlerInput));
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
-        console.log('Persistence State ' + handleIput.requestEnvelope.request.body.userInformationPersistenceStatus);
+        console.log('Persistence State ' + handlerInput.requestEnvelope.request.body.userInformationPersistenceStatus);
     }
 };
 
