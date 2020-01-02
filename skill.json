@@ -1,0 +1,62 @@
+{
+  "manifest": {
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "https://ep.vchrist.at/nodejs/alexa-wastecalendar/",
+          "sslCertificateType": "Trusted"
+        },
+        "interfaces": []
+      }
+    },
+    "events": {
+      "publications": [
+        {
+          "eventName": "AMAZON.TrashCollectionAlert.Activated"
+        }
+      ],
+      "subscriptions": [
+        {
+          "eventName": "SKILL_PROACTIVE_SUBSCRIPTION_CHANGED"
+        },
+        {
+          "eventName": "SKILL_ACCOUNT_LINKED"
+        }
+      ],
+      "endpoint": {
+        "uri": "https://ep.vchrist.at/nodejs/alexa-wastecalendar/",
+        "sslCertificateType": "Trusted"
+      }
+    },
+    "manifestVersion": "1.0",
+    "permissions": [
+      {
+        "name": "alexa::devices:all:notifications:write"
+      }
+    ],
+    "privacyAndCompliance": {
+      "locales": {
+        "de-DE": {}
+      }
+    },
+    "publishingInformation": {
+      "locales": {
+        "de-DE": {
+          "name": "Waste Calendar",
+          "summary": "Sample Short Description",
+          "description": "Sample Full Description",
+          "examplePhrases": [
+            "Alexa open hello world",
+            "hello",
+            "help"
+          ],
+          "keywords": []
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Sample Testing Instructions.",
+      "category": "ORGANIZERS_AND_ASSISTANTS",
+      "distributionCountries": []
+    }
+  }
+}
