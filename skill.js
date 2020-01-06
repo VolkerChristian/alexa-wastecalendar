@@ -136,7 +136,7 @@ const AccountLinkedEventHandler = {
         };
         request(options, function(error, response) {
             if (error) throw new Error(error);
-            console.log(response.body);
+            console.log("OC Response: " + JSON.stringify(response.body, null, 4));
         });
 
     }
