@@ -103,11 +103,11 @@ const ErrorHandler = {
 
 const ProactiveEventHandler = {
     canHandle(handlerInput) {
-        console.log(handlerInput);
+//        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.ProactiveSubscriptionChanged';
     },
     handle(handlerInput) {
-        console.log('ALL AlexaSkillEvent.ProactiveSubscriptionChanged ' + JSON.stringify(handlerInput));
+        console.log('ALL AlexaSkillEvent.ProactiveSubscriptionChanged ' + JSON.stringify(handlerInput, null, 4));
         console.log('AWS User ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         //    console.log("Permissions" + JSON.stringify(handlerInput.requestEnvelope.request.body.subscriptions));
@@ -117,11 +117,11 @@ const ProactiveEventHandler = {
 
 const AccountLinkedEventHandler = {
     canHandle(handlerInput) {
-        console.log(handlerInput);
+//        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.SkillAccountLinked';
     },
     handle(handlerInput) {
-        console.log('ALL AlexaSkillEvent.SkillAccountLinked ' + JSON.stringify(handlerInput));
+        console.log('ALL AlexaSkillEvent.SkillAccountLinked ' + JSON.stringify(handlerInput, null, 4));
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('OC AccessToken ' + handlerInput.requestEnvelope.context.System.user.accessToken);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
@@ -131,11 +131,11 @@ const AccountLinkedEventHandler = {
 
 const SkillEnabledEventHandler = {
     canHandle(handlerInput) {
-        console.log(handlerInput);
+//        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.SkillEnabled';
     },
     handle(handlerInput) {
-        console.log('ALL AlexaSkillEvent.SkillEnabled ' + JSON.stringify(handlerInput));
+        console.log('ALL AlexaSkillEvent.SkillEnabled ' + JSON.stringify(handlerInput, null, 4));
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
     }
@@ -143,11 +143,11 @@ const SkillEnabledEventHandler = {
 
 const SkillDisabledEventHandler = {
     canHandle(handlerInput) {
-        console.log(handlerInput);
+//        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.SkillDisabled';
     },
     handle(handlerInput) {
-        console.log('ALL AlexaSkillEvent.SkillDisabled ' + JSON.stringify(handlerInput));
+        console.log('ALL AlexaSkillEvent.SkillDisabled ' + JSON.stringify(handlerInput, null, 4));
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('Persistence State ' + handlerInput.requestEnvelope.request.body.userInformationPersistenceStatus);
