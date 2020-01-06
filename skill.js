@@ -2,6 +2,7 @@
 // Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
 // session persistence, api calls, and more.
 const Alexa = require('ask-sdk-core');
+var request = require('request');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -103,7 +104,7 @@ const ErrorHandler = {
 
 const ProactiveEventHandler = {
     canHandle(handlerInput) {
-//        console.log(handlerInput);
+        //        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.ProactiveSubscriptionChanged';
     },
     handle(handlerInput) {
@@ -117,7 +118,7 @@ const ProactiveEventHandler = {
 
 const AccountLinkedEventHandler = {
     canHandle(handlerInput) {
-//        console.log(handlerInput);
+        //        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.SkillAccountLinked';
     },
     handle(handlerInput) {
@@ -126,12 +127,24 @@ const AccountLinkedEventHandler = {
         console.log('OC AccessToken ' + handlerInput.requestEnvelope.context.System.user.accessToken);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('API AccessToken ' + handlerInput.requestEnvelope.context.System.apiAccessToken);
+        var options = {
+            'method': 'GET',
+            'url': 'https://cloud.vchrist.at/ocs/v2.php/cloud/user?format=json',
+            'headers': {
+                'Authorization': 'Bearer ' + handlerInput.requestEnvelope.context.System.user.accessToken
+            }
+        };
+        request(options, function(error, response) {
+            if (error) throw new Error(error);
+            console.log(response.body);
+        });
+
     }
 };
 
 const SkillEnabledEventHandler = {
     canHandle(handlerInput) {
-//        console.log(handlerInput);
+        //        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.SkillEnabled';
     },
     handle(handlerInput) {
@@ -143,7 +156,7 @@ const SkillEnabledEventHandler = {
 
 const SkillDisabledEventHandler = {
     canHandle(handlerInput) {
-//        console.log(handlerInput);
+        //        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.SkillDisabled';
     },
     handle(handlerInput) {
@@ -158,19 +171,18 @@ const SkillDisabledEventHandler = {
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
-	.addRequestHandlers(
-	    LaunchRequestHandler,
-	    HelloWorldIntentHandler,
-	    HelpIntentHandler,
-	    CancelAndStopIntentHandler,
-	    ProactiveEventHandler,
-	    AccountLinkedEventHandler,
-	    SessionEndedRequestHandler,
-        SkillEnabledEventHandler,
-        SkillDisabledEventHandler,
-	    IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
-	)
-	.addErrorHandlers(
-		ErrorHandler
-	)
-	.create();
+    .addRequestHandlers(
+    LaunchRequestHandler,
+    HelloWorldIntentHandler,
+    HelpIntentHandler,
+    CancelAndStopIntentHandler,
+    ProactiveEventHandler,
+    AccountLinkedEventHandler,
+    SessionEndedRequestHandler,
+    SkillEnabledEventHandler,
+    SkillDisabledEventHandler,
+    IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+)
+    .addErrorHandlers(
+    ErrorHandler)
+    .create();
