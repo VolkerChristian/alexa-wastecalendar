@@ -3,6 +3,32 @@
 // session persistence, api calls, and more.
 const Alexa = require('ask-sdk-core');
 var request = require('request');
+var mysql = require('mysql');
+
+var db = mysql.createConnection({
+    host: 'proliant.home.vchrist.at',
+    user: 'wastecalendar',
+    password: '!!!SoMaSi01!!!'
+});
+
+db.connect();
+
+function handleDisconnect(client) {
+    client.on('error', function(error) {
+        console.log("ErrorCode: " + error.code);
+        if (!error.fatal) return;
+        if (error.code !== 'PROTOCOL_CONNECTION_LOST' && error.code !== 'PROTOCOL_PACKETS_OUT_OF_ORDER' && error.code !== 'ECONNREFUSED') throw error;
+
+        console.log('> Re-connecting lost MySQL connection: ' + error.stack);
+
+        db = mysql.createConnection(client.config);
+        handleDisconnect(db);
+        db.connect();
+        console.log('Connected!');
+    });
+}
+
+handleDisconnect(db);
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -112,7 +138,6 @@ const ProactiveEventHandler = {
         console.log('AWS User ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         //    console.log("Permissions" + JSON.stringify(handlerInput.requestEnvelope.request.body.subscriptions));
-        console.log('ALL ' + JSON.stringify(handlerInput));
     }
 };
 
@@ -139,7 +164,6 @@ const AccountLinkedEventHandler = {
             oc_data = JSON.parse(response.body);
             console.log("OC Response: " + JSON.stringify(oc_data, null, 4));
         });
-
     }
 };
 
