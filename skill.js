@@ -155,7 +155,17 @@ const ProactiveEventHandler = {
         console.log('ALL AlexaSkillEvent.ProactiveSubscriptionChanged ' + JSON.stringify(handlerInput, null, 4));
         console.log('AWS User ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
-        //    console.log("Permissions" + JSON.stringify(handlerInput.requestEnvelope.request.body.subscriptions));
+        console.log("Permissions" + (typeof handleInput.requestEnveolpe.request.body !== 'undefined') ? 'JA' : 'NEIN');
+        
+        sql = `UPDATE wastecalendar.amz_user SET amz_permissions = ${(typeof handleInput.requestEnveolpe.request.body !== 'undefined') ? TRUE : FALSE}`;
+        console.log('SQL: ' + sql);
+        db.query(sql, function(err, result) {
+            if (err) {
+                console.error(err.stack);
+            } else {
+                console.log(result.affectedRows + ' record inserted ' + util.inspect(result));
+            }
+        });
     }
 };
 
@@ -180,7 +190,7 @@ const AccountLinkedEventHandler = {
         request(options, function(error, response) {
             if (error) throw new Error(error);
             oc_data = JSON.parse(response.body);
-            console.log("OC Response: " + JSON.stringify(oc_data, null, 4));
+            console.log('OC Response: ' + JSON.stringify(oc_data, null, 4));
         });
     }
 };
@@ -194,6 +204,19 @@ const SkillEnabledEventHandler = {
         console.log('ALL AlexaSkillEvent.SkillEnabled ' + JSON.stringify(handlerInput, null, 4));
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
+        
+        sql = `INSERT INTO wastecalendar.amz_user (amz_userid, amz_endpoint) VALUES (
+            ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)},
+            ${db.escape(handlerInput.requestEnvelope.context.System.apiEndpoint)}
+        )`;
+        console.log('SQL: ' + sql);
+        db.query(sql, function(err, result) {
+            if (err) {
+                console.error(err.stack);
+            } else {
+                console.log(result.affectedRows + ' record inserted ' + util.inspect(result));
+            }
+        });
     }
 };
 
@@ -207,9 +230,20 @@ const SkillDisabledEventHandler = {
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('Persistence State ' + handlerInput.requestEnvelope.request.body.userInformationPersistenceStatus);
+        
+        sql = `DELETE FROM wastecalendar.amz_user WHERE amz_userid = ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
+        console.log('SQL: ' + sql);
+        db.query(sql, function(err, result) {
+            if (err) {
+                console.error(err.stack);
+            } else {
+                console.log(result.affectedRows + ' record inserted ' + util.inspect(result));
+            }
+        });
     }
 };
 
+//console.log('Test: ' + (typeof hallo == 'undefined') ? 'ja' : 'nein');
 // The SkillBuilder acts as the entry point for your skill, routing all request and response
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
