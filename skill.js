@@ -192,6 +192,16 @@ const AccountLinkedEventHandler = {
             if (error) throw new Error(error);
             oc_data = JSON.parse(response.body);
             console.log('OC Response: ' + JSON.stringify(oc_data, null, 4));
+                    
+            sql = `UPDATE wastecalendar.amz_user SET oc_userid = ${oc_data.ocs.data.id}`;
+            console.log('SQL: ' + sql);
+            db.query(sql, function(err, result) {
+                if (err) {
+                    console.error(err.stack);
+                } else {
+                    console.log(result.affectedRows + ' record inserted ' + util.inspect(result));
+                }
+            });
         });
     }
 };
