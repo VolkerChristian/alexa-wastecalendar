@@ -5,14 +5,6 @@ const Alexa = require('ask-sdk-core');
 var request = require('request');
 var mysql = require('mysql');
 
-var db = mysql.createConnection({
-    host: 'proliant.home.vchrist.at',
-    user: 'wastecalendar',
-    password: '!!!SoMaSi01!!!'
-});
-
-db.connect();
-
 function handleDisconnect(client) {
     client.on('error', function(error) {
         console.log("ErrorCode: " + error.code);
@@ -28,6 +20,12 @@ function handleDisconnect(client) {
     });
 }
 
+var db = mysql.createConnection({
+    host: 'proliant.home.vchrist.at',
+    user: 'wastecalendar',
+    password: '!!!SoMaSi01!!!'
+});
+db.connect();
 handleDisconnect(db);
 
 const LaunchRequestHandler = {
