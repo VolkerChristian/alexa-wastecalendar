@@ -156,9 +156,9 @@ const ProactiveEventHandler = {
         console.log('ALL AlexaSkillEvent.ProactiveSubscriptionChanged ' + JSON.stringify(handlerInput, null, 4));
         console.log('AWS User ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
-        console.log("Permissions" + (typeof handlerInput.requestEnveolpe.request.body !== 'undefined') ? 'JA' : 'NEIN');
+        console.log("Permissions" + (typeof handlerInput.requestEnvelope.request.body !== 'undefined') ? 'JA' : 'NEIN');
         
-        sql = `UPDATE wastecalendar.amz_user SET amz_permissions = ${(typeof handleInput.requestEnveolpe.request.body !== 'undefined') ? TRUE : FALSE}`;
+        sql = `UPDATE wastecalendar.amz_user SET amz_permissions = ${(typeof handleInput.requestEnvelope.request.body !== 'undefined') ? TRUE : FALSE}`;
         console.log('SQL: ' + sql);
         db.query(sql, function(err, result) {
             if (err) {
