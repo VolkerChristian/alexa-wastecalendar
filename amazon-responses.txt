@@ -1,0 +1,107 @@
+ALL AlexaSkillEvent.SkillEnabled {
+    "requestEnvelope": {
+        "version": "1.0",
+        "context": {
+            "System": {
+                "application": {
+                    "applicationId": "amzn1.ask.skill.5119403b-f6c6-45f8-bd7e-87787e6f5da2"
+                },
+                "user": {
+                    "userId": "amzn1.ask.account.AG3JDC7TB5M6NBSVWX34LLIAJKIE56EYTT5HZHFOT7K2SNF56R66J3ADHJ56MVFA3KFE2XRN74THZDWMU4TXDVB7DCCHI47MHMJJZZLGOO42FOFCWVYP57UIVM7HLSCG5VMG6ER4R73ZSG3O7IV25SIWSNNEZ4LXGO5XARIQKYVC25SCFBRXSIROLOMXWEXNTQ3KSRVKRV6AKYQ"
+                },
+                "apiEndpoint": "https://api.eu.amazonalexa.com",
+                "apiAccessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjUxMTk0MDNiLWY2YzYtNDVmOC1iZDdlLTg3Nzg3ZTZmNWRhMiIsImV4cCI6MTU3ODMxNjIwMiwiaWF0IjoxNTc4MzEyNjAyLCJuYmYiOjE1NzgzMTI2MDIsInByaXZhdGVDbGFpbXMiOnsiY29uc2VudFRva2VuIjpudWxsLCJ1c2VySWQiOiJhbXpuMS5hc2suYWNjb3VudC5BRzNKREM3VEI1TTZOQlNWV1gzNExMSUFKS0lFNTZFWVRUNUhaSEZPVDdLMlNORjU2UjY2SjNBREhKNTZNVkZBM0tGRTJYUk43NFRIWkRXTVU0VFhEVkI3RENDSEk0N01ITUpKWlpMR09PNDJGT0ZDV1ZZUDU3VUlWTTdITFNDRzVWTUc2RVI0UjczWlNHM083SVYyNVNJV1NOTkVaNExYR081WEFSSVFLWVZDMjVTQ0ZCUlhTSVJPTE9NWFdFWE5UUTNLU1JWS1JWNkFLWVEifX0.hTDw7gKkXFNGoUggDYjmUUwsyHrNtSksyTglO3XFEtD9EMtcUgLzrDz6dNVOl71GFXcQGkrAN2R-htW0_LbZtNBVLIzSulkn_fPTjIqHB9wJPYC4rwj0HwZrn_j0URlg0N2aYqs5NaCf_TsaBwX66vUVHa0ofuICAca_SvOr8OPe35d5iK36AFxvFND0z-k5MVo09_Sj4VeFvvOo2tpxXuJRUn0DC0ofjilijktVWoMcGvMKag2cDN5vqtKZB_gfq2jedm8oDdgdLr4bY0m3GOnk3PG0r5Ounrqz7PHsdlYU4Xot2tfCjAG568SC13pbA4LGNndzOlJMt9_D8We5mA"
+            }
+        },
+        "request": {
+            "type": "AlexaSkillEvent.SkillEnabled",
+            "requestId": "7d026866-5adf-456b-85c4-e649fd42486f",
+            "timestamp": "2020-01-06T12:10:01Z",
+            "eventCreationTime": "2020-01-06T12:10:01Z",
+            "eventPublishingTime": "2020-01-06T12:10:02Z"
+        }
+    },
+    "attributesManager": {},
+    "responseBuilder": {}
+}
+
+
+
+
+
+ALL AlexaSkillEvent.ProactiveSubscriptionChanged {
+    "requestEnvelope": {
+        "request": {
+            "timestamp": "2020-01-06T12:10:48Z",
+            "requestId": "95380f4c-bf95-4fec-9a46-ce0f6bf6443a",
+            "body": {
+                "subscriptions": [
+                    {
+                        "eventName": "AMAZON.TrashCollectionAlert.Activated"
+                    }
+                ]
+            },
+            "type": "AlexaSkillEvent.ProactiveSubscriptionChanged"
+        },
+        "version": "1.0",
+        "context": {
+            "System": {
+                "apiEndpoint": "https://api.eu.amazonalexa.com",
+                "user": {
+                    "userId": "amzn1.ask.account.AG3JDC7TB5M6NBSVWX34LLIAJKIE56EYTT5HZHFOT7K2SNF56R66J3ADHJ56MVFA3KFE2XRN74THZDWMU4TXDVB7DCCHI47MHMJJZZLGOO42FOFCWVYP57UIVM7HLSCG5VMG6ER4R73ZSG3O7IV25SIWSNNEZ4LXGO5XARIQKYVC25SCFBRXSIROLOMXWEXNTQ3KSRVKRV6AKYQ"
+                },
+                "application": {
+                    "applicationId": "amzn1.ask.skill.5119403b-f6c6-45f8-bd7e-87787e6f5da2"
+                }
+            }
+        }
+    },
+    "attributesManager": {},
+    "responseBuilder": {}
+}
+
+
+
+
+
+
+ALL AlexaSkillEvent.SkillAccountLinked {
+    "requestEnvelope": {
+        "version": "1.0",
+        "context": {
+            "System": {
+                "application": {
+                    "applicationId": "amzn1.ask.skill.5119403b-f6c6-45f8-bd7e-87787e6f5da2"
+                },
+                "user": {
+                    "userId": "amzn1.ask.account.AG3JDC7TB5M6NBSVWX34LLIAJKIE56EYTT5HZHFOT7K2SNF56R66J3ADHJ56MVFA3KFE2XRN74THZDWMU4TXDVB7DCCHI47MHMJJZZLGOO42FOFCWVYP57UIVM7HLSCG5VMG6ER4R73ZSG3O7IV25SIWSNNEZ4LXGO5XARIQKYVC25SCFBRXSIROLOMXWEXNTQ3KSRVKRV6AKYQ",
+                    "accessToken": "3K6d5N1U2LdnR2kMQ0j9ncNkO1ppTOaSKbhcbu69zoCfRP3j2Ob6fFn0xPaXvLAl4K8HatgD",
+                    "permissions": {
+                        "consentToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjUxMTk0MDNiLWY2YzYtNDVmOC1iZDdlLTg3Nzg3ZTZmNWRhMiIsImV4cCI6MTU3ODMxNjMxMCwiaWF0IjoxNTc4MzEyNzEwLCJuYmYiOjE1NzgzMTI3MTAsInByaXZhdGVDbGFpbXMiOnsiY29uc2VudFRva2VuIjoiQXR6YXxJd0VCSU9YTkdxSjdGdHpXSmxuYmpfWUlsN0NzaTA2RkZJeHEzOWp5WmJ0UVkxZk1uX1RvTXcyRnh1VUR5SE9QYTJZMWswb2ZLc3h0dEVTb3o2Y2ZQVWVCQzFtT25FX2lOOHVXQTdTTEw0THo3V3BaVlpENlJaOWdnVlcyRlctb3JxVFN4bjNkRmJ3dlVSUUJIT3Q5R1lleGk1Sm14aVhIODJzNUcyQ2h6cjR5M2tqQmQ0RG0wSU9fa09xN1lZUlg5TUxUS3ZIdFRyajR6WlNEX01GVTdjc3JaS3liX3hDNjk4REpOdVdmcW1VQ0pXQ1ZrYklRd1o4WG5CMTZyRnR5ZUtmZUtzSDdSQUdyNkZHNVdzSElSNHlfSkYxRmM5OEhscHpVUnktbHR1OXhpZmgxTmhVejJvakhURkZXTnM3T0hVSlR4WWNRMUt6aUNhZWh0RDdNeUlLOHJURHVWVzlHaTFDT1J3YXgxZXpyQTRnNFhiMkpkSk05eWRmRi1PMkFjTWZveXVLVHpOYVBLX05pWEdGLVJFNF8wUXdSeFh2ZWZwSmp5ekNSQ1JhMTlaRU5TbXFoallGT1FYcTlKYVFNaWU3ZFViZUUzWVp3WnFJQWFjQ0hYellTNm50SVc2Uk1SeHdBb0MtVDB2U213cVJXbmlzS21ZVWlER2VFMmN0ZVdfYldBbm1yU3dtWHU2QUJodTlVVmNTVmFtUmRDc3h1ZFp2T050c3pQTW94SFh6X2pSVF9fVXp2VHB3RHNHc1gwbUdjRWh1QzM3ZmZGMk9wNWdmQktZWDJhS2NJUFFBQ0YtUG55eU1IUFRvOFQyaVE5cFp0TkFCWVIyMldldlF6bmV4MFJOeXhkWmVKVG8yWDhWTHhjaEN1Q1ZfayIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFHM0pEQzdUQjVNNk5CU1ZXWDM0TExJQUpLSUU1NkVZVFQ1SFpIRk9UN0syU05GNTZSNjZKM0FESEo1Nk1WRkEzS0ZFMlhSTjc0VEhaRFdNVTRUWERWQjdEQ0NISTQ3TUhNSkpaWkxHT080MkZPRkNXVllQNTdVSVZNN0hMU0NHNVZNRzZFUjRSNzNaU0czTzdJVjI1U0lXU05ORVo0TFhHTzVYQVJJUUtZVkMyNVNDRkJSWFNJUk9MT01YV0VYTlRRM0tTUlZLUlY2QUtZUSJ9fQ.L1pDBGQYCCXR6KfamYsjYrxJetSM2c5rT-EeTCUYv1fflsODorVLm4b2n2sLqkaV8a3ObwZOveJVjWSNmptRkOXeKASUsz6N0j7RsgG-N8OamhSyeCw9gwZdeTe5f1hAVVpMWImw4P9BJGgPXMH685XL0b7pjkvVT8C6GewYVFx2tfOMMXqc1Olk8yO4QiXzrY9zMU9RDu-jOQGlCQ_r854CVujqZNBAFUJ8o7JNEgVCciQNCwMcENFyk1tPvvH4yyL69TRJU-4FeZ-QgESBnpAvGkWS95XYAo78Z-reN3f1dTD-AMh6UXPuL5PoVY3GukMQtEuIKkAhZyRRe4-25w"
+                    }
+                },
+                "apiEndpoint": "https://api.eu.amazonalexa.com",
+                "apiAccessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjUxMTk0MDNiLWY2YzYtNDVmOC1iZDdlLTg3Nzg3ZTZmNWRhMiIsImV4cCI6MTU3ODMxNjMxMCwiaWF0IjoxNTc4MzEyNzEwLCJuYmYiOjE1NzgzMTI3MTAsInByaXZhdGVDbGFpbXMiOnsiY29uc2VudFRva2VuIjoiQXR6YXxJd0VCSU9YTkdxSjdGdHpXSmxuYmpfWUlsN0NzaTA2RkZJeHEzOWp5WmJ0UVkxZk1uX1RvTXcyRnh1VUR5SE9QYTJZMWswb2ZLc3h0dEVTb3o2Y2ZQVWVCQzFtT25FX2lOOHVXQTdTTEw0THo3V3BaVlpENlJaOWdnVlcyRlctb3JxVFN4bjNkRmJ3dlVSUUJIT3Q5R1lleGk1Sm14aVhIODJzNUcyQ2h6cjR5M2tqQmQ0RG0wSU9fa09xN1lZUlg5TUxUS3ZIdFRyajR6WlNEX01GVTdjc3JaS3liX3hDNjk4REpOdVdmcW1VQ0pXQ1ZrYklRd1o4WG5CMTZyRnR5ZUtmZUtzSDdSQUdyNkZHNVdzSElSNHlfSkYxRmM5OEhscHpVUnktbHR1OXhpZmgxTmhVejJvakhURkZXTnM3T0hVSlR4WWNRMUt6aUNhZWh0RDdNeUlLOHJURHVWVzlHaTFDT1J3YXgxZXpyQTRnNFhiMkpkSk05eWRmRi1PMkFjTWZveXVLVHpOYVBLX05pWEdGLVJFNF8wUXdSeFh2ZWZwSmp5ekNSQ1JhMTlaRU5TbXFoallGT1FYcTlKYVFNaWU3ZFViZUUzWVp3WnFJQWFjQ0hYellTNm50SVc2Uk1SeHdBb0MtVDB2U213cVJXbmlzS21ZVWlER2VFMmN0ZVdfYldBbm1yU3dtWHU2QUJodTlVVmNTVmFtUmRDc3h1ZFp2T050c3pQTW94SFh6X2pSVF9fVXp2VHB3RHNHc1gwbUdjRWh1QzM3ZmZGMk9wNWdmQktZWDJhS2NJUFFBQ0YtUG55eU1IUFRvOFQyaVE5cFp0TkFCWVIyMldldlF6bmV4MFJOeXhkWmVKVG8yWDhWTHhjaEN1Q1ZfayIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFHM0pEQzdUQjVNNk5CU1ZXWDM0TExJQUpLSUU1NkVZVFQ1SFpIRk9UN0syU05GNTZSNjZKM0FESEo1Nk1WRkEzS0ZFMlhSTjc0VEhaRFdNVTRUWERWQjdEQ0NISTQ3TUhNSkpaWkxHT080MkZPRkNXVllQNTdVSVZNN0hMU0NHNVZNRzZFUjRSNzNaU0czTzdJVjI1U0lXU05ORVo0TFhHTzVYQVJJUUtZVkMyNVNDRkJSWFNJUk9MT01YV0VYTlRRM0tTUlZLUlY2QUtZUSJ9fQ.L1pDBGQYCCXR6KfamYsjYrxJetSM2c5rT-EeTCUYv1fflsODorVLm4b2n2sLqkaV8a3ObwZOveJVjWSNmptRkOXeKASUsz6N0j7RsgG-N8OamhSyeCw9gwZdeTe5f1hAVVpMWImw4P9BJGgPXMH685XL0b7pjkvVT8C6GewYVFx2tfOMMXqc1Olk8yO4QiXzrY9zMU9RDu-jOQGlCQ_r854CVujqZNBAFUJ8o7JNEgVCciQNCwMcENFyk1tPvvH4yyL69TRJU-4FeZ-QgESBnpAvGkWS95XYAo78Z-reN3f1dTD-AMh6UXPuL5PoVY3GukMQtEuIKkAhZyRRe4-25w"
+            }
+        },
+        "request": {
+            "type": "AlexaSkillEvent.SkillAccountLinked",
+            "requestId": "36a79dd7-81da-400a-990e-d4dd843f8101",
+            "timestamp": "2020-01-06T12:11:50Z",
+            "eventCreationTime": "2020-01-06T12:11:50Z",
+            "eventPublishingTime": "2020-01-06T12:11:50Z",
+            "body": {
+                "accessToken": "3K6d5N1U2LdnR2kMQ0j9ncNkO1ppTOaSKbhcbu69zoCfRP3j2Ob6fFn0xPaXvLAl4K8HatgD"
+            }
+        }
+    },
+    "attributesManager": {},
+    "responseBuilder": {}
+}
+
+
+
+
+
+
+
