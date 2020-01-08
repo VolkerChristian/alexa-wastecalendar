@@ -5,28 +5,48 @@ const Alexa = require('ask-sdk-core');
 var request = require('request');
 var mysql = require('mysql');
 
-function handleDisconnect(client) {
-    client.on('error', function(error) {
-        console.log("ErrorCode: " + error.code);
+var db;
+
+function handleDisconnect() {
+    db = mysql.createConnection({
+//        host: 'proliant.home.vchrist.at',
+        host: '192.168.1.3',
+        user: 'wastecalendar',
+        password: '!!!SoMaSi01!!!'
+    });
+
+    db.connect(function onConnect(err) {
+        if (err) {
+            console.log('error when connecting to db:', err);
+            setTimeout(handleDisconnect, 1000);
+        } else {
+            console.log('MySQL Connected!');
+        }
+    });
+
+    db.origQuery = db.query;
+
+    db.query = function(sql, cb) {
+        db.origQuery(sql, function(err, result) {
+            if (err) {
+                console.log('Query Error: ' + err);
+            } else {}
+            cb(err, result);
+        });
+    };
+
+    db.on('error', function(error) {
+        console.log('On Error: ' + error);
         if (!error.fatal) return;
         if (error.code !== 'PROTOCOL_CONNECTION_LOST' && error.code !== 'PROTOCOL_PACKETS_OUT_OF_ORDER' && error.code !== 'ECONNREFUSED') throw error;
 
         console.log('> Re-connecting lost MySQL connection: ' + error.stack);
 
-        db = mysql.createConnection(client.config);
-        handleDisconnect(db);
-        db.connect();
-        console.log('Connected!');
+        setTimeout(handleDisconnect(), 1000);
     });
 }
 
-var db = mysql.createConnection({
-    host: 'proliant.home.vchrist.at',
-    user: 'wastecalendar',
-    password: '!!!SoMaSi01!!!'
-});
-db.connect();
-handleDisconnect(db);
+handleDisconnect();
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
