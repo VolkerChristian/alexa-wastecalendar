@@ -216,9 +216,11 @@ const SkillEnabledEventHandler = {
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         
-        sql = `INSERT INTO wastecalendar.amz_user (amz_userid, amz_endpoint) VALUES (
+        sql = `INSERT INTO wastecalendar.amz_user (amz_skillid, amz_userid, amz_apiendpoint, amz_apiaccesstoken) VALUES (
+            ${db.escape(handlerInput.requestEnvelope.context.System.application.applicationId)},
             ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)},
-            ${db.escape(handlerInput.requestEnvelope.context.System.apiEndpoint)}
+            ${db.escape(handlerInput.requestEnvelope.context.System.apiEndpoint)},
+            ${db.escape(handlerInput.requestEnvelope.context.System.apiAccessToken)}
         )`;
         console.log('SQL: ' + sql);
         db.query(sql, function(err, result) {
@@ -242,7 +244,11 @@ const SkillDisabledEventHandler = {
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('Persistence State ' + handlerInput.requestEnvelope.request.body.userInformationPersistenceStatus);
         
-        sql = `DELETE FROM wastecalendar.amz_user WHERE amz_userid = ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
+        sql = `DELETE FROM wastecalendar.amz_user WHERE amz_userid = ${
+                db.escape(handlerInput.requestEnvelope.context.System.user.userId)
+            } AND amz_skillid = ${
+                db.escape(handlerInput.requestEnvelope.context.System.application.applicationId)
+            }`;
         console.log('SQL: ' + sql);
         db.query(sql, function(err, result) {
             if (err) {
