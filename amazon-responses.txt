@@ -29,6 +29,7 @@ ALL AlexaSkillEvent.SkillEnabled {
 
 
 
+
 ALL AlexaSkillEvent.ProactiveSubscriptionChanged {
     "requestEnvelope": {
         "request": {
@@ -104,4 +105,35 @@ ALL AlexaSkillEvent.SkillAccountLinked {
 
 
 
+
+ALL AlexaSkillEvent.SkillDisabled {
+    "requestEnvelope": {
+        "version": "1.0",
+        "context": {
+            "System": {
+                "application": {
+                    "applicationId": "amzn1.ask.skill.5119403b-f6c6-45f8-bd7e-87787e6f5da2"
+                },
+                "user": {
+                    "userId": "amzn1.ask.account.AH4OWAWOJTJRZIYN6FMHTKIE2FS4NQV5AL2IDFJJFLYKN3YFYO2FHHWBL2BSNFN5ALCCGOCS5H2R5QUIZ4CDCR2FUDVIL5S3VLCLGODNJSMMG7H3WQNFVMDCKTFPWNC7OABGITMFRXUEAM7LHCUQLRIAHBKTXY4OZN3SBICNIJFOXXNJXTRY5JB6SMTRQTOX3NMKV4AAS4K7YTA",
+                    "accessToken": "0vvQwdu8Wxlxu2W1z1DIAJmAp9n1RjU3qnADMgLzwFnREQIDbQOxPRafyzg10IBoQeAHBag4"
+                },
+                "apiEndpoint": "https://api.eu.amazonalexa.com",
+                "apiAccessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjUxMTk0MDNiLWY2YzYtNDVmOC1iZDdlLTg3Nzg3ZTZmNWRhMiIsImV4cCI6MTU3ODU5Nzk0MCwiaWF0IjoxNTc4NTk0MzQwLCJuYmYiOjE1Nzg1OTQzNDAsInByaXZhdGVDbGFpbXMiOnsiY29uc2VudFRva2VuIjpudWxsLCJ1c2VySWQiOiJhbXpuMS5hc2suYWNjb3VudC5BSDRPV0FXT0pUSlJaSVlONkZNSFRLSUUyRlM0TlFWNUFMMklERkpKRkxZS04zWUZZTzJGSEhXQkwyQlNORk41QUxDQ0dPQ1M1SDJSNVFVSVo0Q0RDUjJGVURWSUw1UzNWTENMR09ETkpTTU1HN0gzV1FORlZNRENLVEZQV05DN09BQkdJVE1GUlhVRUFNN0xIQ1VRTFJJQUhCS1RYWTRPWk4zU0JJQ05JSkZPWFhOSlhUUlk1SkI2U01UUlFUT1gzTk1LVjRBQVM0SzdZVEEifX0.Dd4TmkfrHmLNj2F1xnxDAFGWX0LyMfNM5TgFE32twJr6uxoYBc2YET4j6lZUjc2lfHihXsfHMufKBzNW4Qlk-VijbOehSi7e7Ov5DTH3WaSwyoP0SoURPttkJEIflSdntVcuspaE9KVHcPRNLjc4jg9hMnv55Zyj9sXhq0KlcCoXgp3RAhBS46qnCjYOK0WYY4wq4OARovHWnwePIJHUkohJvPzXBOO7rD99NT9m7j4alsVoc2amOnw8vdQjiHo8cxlr7KG1OXovKhC-ttB0y45pDmIPIjsSyRhumsyMz5o1hwvB1_60-IKu3vAVe-dcDZNS7JfCpb8_Vj8otudqtA"
+            }
+        },
+        "request": {
+            "type": "AlexaSkillEvent.SkillDisabled",
+            "requestId": "68460472-ea02-4e46-ba76-57ef15d7d800",
+            "timestamp": "2020-01-09T18:25:40Z",
+            "eventCreationTime": "2020-01-09T18:25:40Z",
+            "eventPublishingTime": "2020-01-09T18:25:40Z",
+            "body": {
+                "userInformationPersistenceStatus": "NOT_PERSISTED"
+            }
+        }
+    },
+    "attributesManager": {},
+    "responseBuilder": {}
+}
 
