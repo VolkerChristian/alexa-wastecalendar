@@ -29,11 +29,18 @@ function handleDisconnect() {
 
     db.origQuery = db.query;
 
-    db.query = function(sql, cb) {
-        db.origQuery(sql, function(err, result) {
+    db.query = function (sql, values, cb) {
+        console.log('Query start' + sql);
+        if (!cb) {
+            cb = values;
+            values = null;
+        }
+        db.origQuery(sql, values, function (err, result) {
+            console.log('Query end');
             if (err) {
-                console.log('Query Error: ' + err);
-            } else {}
+                console.error(err.stack);
+                setTimeout(handleDisconnect, 1000);
+            }
             cb(err, result);
         });
     };
