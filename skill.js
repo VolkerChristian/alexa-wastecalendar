@@ -288,4 +288,4 @@ exports.handler = Alexa.SkillBuilders.custom()
 )
     .addErrorHandlers(
     ErrorHandler)
-    .create();
+    .lambda();
