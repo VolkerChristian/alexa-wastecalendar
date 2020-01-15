@@ -170,7 +170,7 @@ const ProactiveEventHandler = {
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('Permissions' + (typeof handlerInput.requestEnvelope.request.body !== 'undefined') ? 'JA' : 'NEIN');
         
-        sql = `UPDATE wastecalendar.amz_user SET amz_permissions = ${(typeof handlerInput.requestEnvelope.request.body !== 'undefined') ? 1 : 0} WHERE amz_userid = ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
+        var sql = `UPDATE wastecalendar.amz_user SET amz_permissions = ${(typeof handlerInput.requestEnvelope.request.body !== 'undefined') ? 1 : 0} WHERE amz_userid = ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
         console.log('SQL: ' + sql);
         db.query(sql, function(err, result) {
             if (err) {
@@ -202,10 +202,10 @@ const AccountLinkedEventHandler = {
         };
         request(options, function(error, response) {
             if (error) throw new Error(error);
-            oc_data = JSON.parse(response.body);
+            var oc_data = JSON.parse(response.body);
             console.log('OC Response: ' + JSON.stringify(oc_data, null, 4));
                     
-            sql = `UPDATE wastecalendar.amz_user SET oc_userid = ${db.escape(oc_data.ocs.data.id)}, amz_accountlinked = 1 WHERE amz_userid = ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
+            var sql = `UPDATE wastecalendar.amz_user SET oc_userid = ${db.escape(oc_data.ocs.data.id)}, amz_accountlinked = 1 WHERE amz_userid = ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
             console.log('SQL: ' + sql);
             db.query(sql, function(err, result) {
                 if (err) {
@@ -228,7 +228,7 @@ const SkillEnabledEventHandler = {
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         
-        sql = `INSERT INTO wastecalendar.amz_user (amz_skillid, amz_userid, amz_apiendpoint, amz_apiaccesstoken) VALUES (
+        var sql = `INSERT INTO wastecalendar.amz_user (amz_skillid, amz_userid, amz_apiendpoint, amz_apiaccesstoken) VALUES (
             ${db.escape(handlerInput.requestEnvelope.context.System.application.applicationId)},
             ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)},
             ${db.escape(handlerInput.requestEnvelope.context.System.apiEndpoint)},
@@ -256,7 +256,7 @@ const SkillDisabledEventHandler = {
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('Persistence State ' + handlerInput.requestEnvelope.request.body.userInformationPersistenceStatus);
         
-        sql = `DELETE FROM wastecalendar.amz_user WHERE amz_userid = ${
+        var sql = `DELETE FROM wastecalendar.amz_user WHERE amz_userid = ${
                 db.escape(handlerInput.requestEnvelope.context.System.user.userId)
             } AND amz_skillid = ${
                 db.escape(handlerInput.requestEnvelope.context.System.application.applicationId)
