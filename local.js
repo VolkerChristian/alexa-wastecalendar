@@ -63,139 +63,12 @@ function handleDisconnect() {
 handleDisconnect();
 
 var nextcloudAuth = new ClientOAuth2({
-    clientId: 'V6OnG47qp6LqSberX72YASemhElRCOpq6DdAN9KP5J2bDzoLxMZff07H3ZDdQ85P',
-    clientSecret: 'Lfr7sn3cQfnec3OYtqMcTfrTFtWgj3AzhDYsD7vbZC7hPsbxDD8z9xiiv0vhR8hY',
+    clientId: 'BAQwGDpEKCRtl7Kn21xfXaYxsS3XewlV1EqbYrUZP8jeVI6edo6l0WBX6pfc8hrc',
+    clientSecret: 'jg9WPACcgIbDlq5FT7iIx7YL6gup4QRtvZNBBE6DjbVK4vPDyb4RFLholM65b7tP',
     accessTokenUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/api/v1/token',
     authorizationUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/authorize',
-    redirectUri: 'http://calisto.home.vchrist.at:8081/auth/nextcloud/callback',
+    redirectUri: 'http://calisto.home.vchrist.at:8081/wastereminder/auth/nextcloud/callback',
     scopes: []
-});
-
-var manager = express();
-
-manager.get('/auth/nextcloud', function (req, res) {
-    if (db.state === 'disconnected') {
-        return res.status(500).send('No Database connection!\n');
-    }
-
-    var uri = nextcloudAuth.code.getUri();
-
-    console.log(util.inspect(uri));
-    res.redirect(uri);
-});
-
-function insertUser(user, cb) {
-    console.log('AUTH: Create account for user ' + user.data.user_id);
-
-    var sql = 'INSERT INTO wastecalendar.oc_user SET ?';
-
-    var ocUser = {
-        oc_userid: user.data.user_id,
-        oc_accessToken: user.accessToken,
-        oc_refreshtoken: user.refreshToken,
-        oc_expires: user.expires
-    };
-
-    db.query(sql, ocUser, function (err, result) {
-        if (!err) {
-            console.log(result.affectedRows + ' record inserted ' + util.inspect(result));
-        }
-        return cb(err, user);
-    });
-}
-
-function refreshUser(user, cb) {
-    console.log('RT: Refreshing token for user ' + user.data.user_id);
-
-    user.refresh().then(function (updatedUser) {
-        console.log('AccessToken: ' + updatedUser.accessToken);
-        console.log('RefreshToken: ' + updatedUser.refreshToken);
-        console.log('Expires: ' + updatedUser.expires);
-
-        var updatedToken = [
-            // new values
-            {
-                oc_accesstoken: updatedUser.accessToken,
-                oc_refreshtoken: updatedUser.refreshToken,
-                oc_expires: updatedUser.expires
-            },
-            // condition
-            {
-                oc_userid: updatedUser.data.user_id
-            }
-        ];
-
-        var sql_UpdateToken = 'UPDATE wastecalendar.oc_user SET ? WHERE ?';
-
-        db.query(sql_UpdateToken, updatedToken, function (err, result) {
-            if (!err) {
-                console.log(result.affectedRows + ' record updated');
-            }
-
-            if (cb) {
-                cb(err, updatedUser);
-            }
-        });
-    });
-}
-
-function insertAndUpdateUser(user, res) {
-    insertUser(user, function (error, user) {
-        if (error) {
-            console.error(error);
-            res.statusCode = 500;
-            res.end();
-            return;
-        }
-        refreshUser(user, function (error, updatedUser) {
-            if (error) {
-                console.error(error);
-                res.statusCode = 500;
-                res.end();
-                return;
-            }
-            return res.send(updatedUser.accessToken);
-        });
-    });
-}
-
-manager.get('/auth/nextcloud/callback', function (req, res) {
-    if (db.state === 'disconnected') {
-        return res.status(500).send('No Database connection!\n');
-    }
-
-    nextcloudAuth.code.getToken(req.originalUrl).then(function (user) {
-        console.log(user);
-
-        var sql = `SELECT * FROM wastecalendar.oc_user WHERE oc_userid = ${db.escape(user.data.user_id)}`;
-
-        db.query(sql, function (err, result) {
-            if (err) {
-                console.error(err.stack);
-                res.statusCode = 500;
-                res.end();
-                return;
-            }
-            console.log(result.length + ' records found ' + util.inspect(result));
-
-            if (result && result.length) {
-                sql = `DELETE FROM wastecalendar.oc_user WHERE oc_userid = ${db.escape(user.data.user_id)}`;
-                db.query(sql, function (err, result) {
-                    if (err) {
-                        console.error(err.stack);
-                        res.statusCode = 500;
-                        res.end();
-                        return;
-                    }
-                    console.log(result.affectedRows + ' records updated ' + util.inspect(result));
-
-                    insertAndUpdateUser(user, res);
-                });
-            } else {
-                insertAndUpdateUser(user, res);
-            }
-        });
-    });
 });
 
 Date.prototype.toUnixTime = function () {
@@ -235,73 +108,40 @@ function processCalendar(user, cb) {
     });
 }
 
-manager.get('/test', function (req, res) {
-    //    sendProactiveEvent();
-    if (db.state === 'disconnected') {
-        return res.status(500).send('No Database connection!\n');
-    }
+function refreshUser(user, cb) {
+    console.log('RT: Refreshing token for user ' + user.data.user_id);
 
-    var sql = 'SELECT * FROM wastecalendar.oc_user';
+    user.refresh().then(function (updatedUser) {
+        console.log('AccessToken: ' + updatedUser.accessToken);
+        console.log('RefreshToken: ' + updatedUser.refreshToken);
+        console.log('Expires: ' + updatedUser.expires);
 
-    console.log('PC: Looking for registered user');
-    db.query(sql, function (err, result) {
-        if (err) {
-            console.error(err.stack);
-            res.statusCode = 500;
-            res.end();
-            return;
-        }
+        var updatedToken = [
+            // new values
+            {
+                oc_accesstoken: updatedUser.accessToken,
+                oc_refreshtoken: updatedUser.refreshToken,
+                oc_expires: updatedUser.expires
+            },
+            // condition
+            {
+                oc_userid: updatedUser.data.user_id
+            }
+        ];
 
-        if (result && result.length) {
-            result.forEach(function (oc_user) {
-                console.log('PC: Processing user ' + oc_user.oc_userid);
+        var sql_UpdateToken = 'UPDATE wastecalendar.oc_user SET ? WHERE ?';
 
-                var tokenData = {
-                    access_token: oc_user.oc_accesstoken,
-                    refresh_token: oc_user.oc_refreshtoken,
-                    token_type: 'bearer',
-                    user_id: oc_user.oc_userid,
-                    expires_in: oc_user.oc_expires.toUnixTime() - Date.unixTime() - 600
-                };
+        db.query(sql_UpdateToken, updatedToken, function (err, result) {
+            if (!err) {
+                console.log(result.affectedRows + ' record updated');
+            }
 
-                var user = nextcloudAuth.createToken(tokenData);
-
-                if (user.expired()) {
-                    refreshUser(user, function (error, updatedUser) {
-                        if (error) {
-                            console.error(error);
-                            res.statusCode = 500;
-                            res.end();
-                            return;
-                        }
-                        processCalendar(updatedUser, function (error, body) {
-                            if (error) {
-                                console.error(err.stack);
-                                res.statusCode = 500;
-                                res.end();
-                                return;
-                            }
-                            return res.send(body);
-                        });
-                    });
-                } else {
-                    processCalendar(user, function (error, body) {
-                        if (error) {
-                            console.error(err.stack);
-                            res.statusCode = 500;
-                            res.end();
-                            return;
-                        }
-                        return res.send(body);
-                    });
-                }
-            });
-        } else {
-            res.end();
-            return;
-        }
+            if (cb) {
+                cb(err, updatedUser);
+            }
+        });
     });
-});
+}
 
 function refreshAmzProactiveEndpointToken(cb) {
     var options = {
@@ -427,6 +267,8 @@ function getAmzProactiveEndpointAccessToken(amz_skillid, oc_userid, cb) {
 function sendProactiveEvent(apiEndpoint, apiAccessToken, amzUserId) {
     let timestamp = new Date();
 
+    console.log('Send proactive event to user ' + amzUserId);
+
     // Sets expiryTime 23 hours ahead of the current date and time
     let expiryTime = new Date();
     expiryTime.setHours(expiryTime.getHours() + 23);
@@ -468,30 +310,116 @@ function sendProactiveEvent(apiEndpoint, apiAccessToken, amzUserId) {
     });
 }
 
-manager.get('/amz', function (req, res) {
-    if (db.state === 'disconnected') {
-        return res.status(500).send('No Database connection!\n');
-    }
+function init(skill) {
+    var manager = express();
+    var managerListener = manager.listen(8081, function () {
+        var router = express.Router();
+        manager.use(skill.path(), router);
 
-    const skillid = 'amzn1.ask.skill.5119403b-f6c6-45f8-bd7e-87787e6f5da2';
+        router.get('/test', function (req, res) {
+            //    sendProactiveEvent();
+            if (db.state === 'disconnected') {
+                return res.status(500).send('No Database connection!\n');
+            }
 
-    getAmzProactiveEndpointAccessToken(skillid, 'voc', function (error, accessToken) {
-        if (error) {
-            console.error(error);
-            res.statusCode = 500;
-            res.end();
-            return;
-        }
-        if (accessToken.permission) {
-            sendProactiveEvent(accessToken.endpoint, accessToken.token, accessToken.userid);
-        }
-        return res.send('SkillId: ' + skillid + ': ' + '\n\tUserId: ' + accessToken.userid + '\n\tEndpoint: ' + accessToken.endpoint + '\n\tToken: ' + accessToken.token + '\n\tExpires: ' + accessToken.expires + '\n');
+            var sql = 'SELECT * FROM wastecalendar.oc_user';
+
+            console.log('PC: Looking for registered user');
+            db.query(sql, function (err, result) {
+                if (err) {
+                    console.error(err.stack);
+                    res.statusCode = 500;
+                    res.end();
+                    return;
+                }
+
+                if (result && result.length) {
+                    result.forEach(function (oc_user) {
+                        console.log('PC: Processing user ' + oc_user.oc_userid);
+
+                        var tokenData = {
+                            access_token: oc_user.oc_accesstoken,
+                            refresh_token: oc_user.oc_refreshtoken,
+                            token_type: 'bearer',
+                            user_id: oc_user.oc_userid,
+                            expires_in: oc_user.oc_expires.toUnixTime() - Date.unixTime() - 600
+                        };
+
+                        var user = nextcloudAuth.createToken(tokenData);
+
+                        if (user.expired()) {
+                            refreshUser(user, function (error, updatedUser) {
+                                if (error) {
+                                    console.error(error);
+                                    res.statusCode = 500;
+                                    res.end();
+                                    return;
+                                }
+                                processCalendar(updatedUser, function (error, body) {
+                                    if (error) {
+                                        console.error(err.stack);
+                                        res.statusCode = 500;
+                                        res.end();
+                                        return;
+                                    }
+                                    return res.send(body);
+                                });
+                            });
+                        } else {
+                            processCalendar(user, function (error, body) {
+                                if (error) {
+                                    console.error(err.stack);
+                                    res.statusCode = 500;
+                                    res.end();
+                                    return;
+                                }
+                                return res.send(body);
+                            });
+                        }
+                    });
+                } else {
+                    res.end();
+                    return;
+                }
+            });
+        });
+
+        router.get('/amz', function (req, res) {
+            if (db.state === 'disconnected') {
+                return res.status(500).send('No Database connection!\n');
+            }
+
+            const skillid = 'amzn1.ask.skill.5119403b-f6c6-45f8-bd7e-87787e6f5da2';
+
+            getAmzProactiveEndpointAccessToken(skillid, 'voc', function (error, accessToken) {
+                if (error) {
+                    console.error(error);
+                    res.statusCode = 500;
+                    res.end();
+                    return;
+                }
+                if (accessToken.permission) {
+                    sendProactiveEvent(accessToken.endpoint, accessToken.token, accessToken.userid);
+                }
+                return res.send('SkillId: ' + skillid + ': ' + '\n\tUserId: ' + accessToken.userid + '\n\tEndpoint: ' + accessToken.endpoint + '\n\tToken: ' + accessToken.token + '\n\tExpires: ' + accessToken.expires + '\n');
+            });
+        });
+
+        router.stack.forEach(function (r) {
+            if (r.route && r.route.path) {
+                console.log('[' + managerListener.address().address + ']:' + managerListener.address().port + skill.path() + r.route.path);
+            }
+        });
     });
-});
+}
 
-manager.listen(8081, function () {
-    console.log('Nextcloud oauth2 client endpoint listening on port 8081!');
-});
+module.exports = init;
+
+/*
+exports.init = init;
+exports.lambda = '';
+exports.router = '';
+*/
 
 /*
 let getQueueLength = function() {
