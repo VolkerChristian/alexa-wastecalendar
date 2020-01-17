@@ -6,7 +6,7 @@ const fs = require('fs');
 
 var handler;
 if (fs.existsSync(__dirname + '/lambda.js')) {
-    handler = require(__dirname + '/lambda');
+    handler = require(__dirname + '/lambda').handler;
 }
 
 var init;

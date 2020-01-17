@@ -3,7 +3,7 @@
     "apis": {
       "custom": {
         "endpoint": {
-          "uri": "https://ep.vchrist.at/nodejs/alexa-wastecalendar/",
+          "uri": "https://ep.vchrist.at/nodejs/wastereminder/handler",
           "sslCertificateType": "Trusted"
         },
         "interfaces": []
@@ -30,7 +30,7 @@
         }
       ],
       "endpoint": {
-        "uri": "https://ep.vchrist.at/nodejs/alexa-wastecalendar/",
+        "uri": "https://ep.vchrist.at/nodejs/wastereminder/handler",
         "sslCertificateType": "Trusted"
       }
     },
