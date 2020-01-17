@@ -9,8 +9,8 @@ const express = require('express');
 //var ClientOAuth2 = require('client-oauth2');
 var util = require('util');
 var request = require('request');
-var db = require('database.js');
-var nextcloudAuth = require('ncoauth2');
+var db = require('./database');
+var nextcloudAuth = require('./ncoauth2');
 
 /*
 var nextcloudAuth = new ClientOAuth2({

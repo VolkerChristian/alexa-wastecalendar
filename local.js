@@ -10,8 +10,8 @@ const express = require('express');
 var util = require('util');
 var request = require('request');
 var ICAL = require('ical.js');
-var db = require('database.js');
-var nextcloudAuth = require('ncoauth2');
+var db = require('./database');
+var nextcloudAuth = require('./ncoauth2');
 
 /*
 var nextcloudAuth = new ClientOAuth2({

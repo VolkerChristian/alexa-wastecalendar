@@ -7,7 +7,7 @@ const Alexa = require('ask-sdk-core');
 var request = require('request');
 var util = require('util');
 
-var db = require('database.js');
+var db = require('./database');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
