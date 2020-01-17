@@ -15,5 +15,4 @@ var nextcloudAuth = new ClientOAuth2({
     scopes: []
 });
 
-
 module.exports = nextcloudAuth;

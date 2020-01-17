@@ -21,6 +21,7 @@ if (fs.existsSync(__dirname + '/public.js')) {
 
 module.exports = {
     handler: handler,
+    handlerPath: '/handler',
     init: init,
     router: router,
     endpointPath: '/wastereminder',
