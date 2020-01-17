@@ -63,11 +63,11 @@ function handleDisconnect() {
 handleDisconnect();
 
 var nextcloudAuth = new ClientOAuth2({
-    clientId: 'wsdWZ7YHytNP94j3CSh2WFMWlQQ3Dq1Dafbf0Y8YQee3VS55kthpRIInBnAUNbR2',
-    clientSecret: '9gJgwVagnH5mev3440kSt6KuCQ5SwKO82zrMucxjwICVgNk0LaHulCU1y7YKHbq7',
+    clientId: 'V6OnG47qp6LqSberX72YASemhElRCOpq6DdAN9KP5J2bDzoLxMZff07H3ZDdQ85P',
+    clientSecret: 'Lfr7sn3cQfnec3OYtqMcTfrTFtWgj3AzhDYsD7vbZC7hPsbxDD8z9xiiv0vhR8hY',
     accessTokenUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/api/v1/token',
     authorizationUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/authorize',
-    redirectUri: 'http://calisto.home.vchrist.at:8080/auth/nextcloud/callback',
+    redirectUri: 'http://calisto.home.vchrist.at:8081/auth/nextcloud/callback',
     scopes: []
 });
 
@@ -139,6 +139,26 @@ function refreshUser(user, cb) {
     });
 }
 
+function insertAndUpdateUser(user, res) {
+    insertUser(user, function (error, user) {
+        if (error) {
+            console.error(error);
+            res.statusCode = 500;
+            res.end();
+            return;
+        }
+        refreshUser(user, function (error, updatedUser) {
+            if (error) {
+                console.error(error);
+                res.statusCode = 500;
+                res.end();
+                return;
+            }
+            return res.send(updatedUser.accessToken);
+        });
+    });
+}
+
 manager.get('/auth/nextcloud/callback', function (req, res) {
     if (db.state === 'disconnected') {
         return res.status(500).send('No Database connection!\n');
@@ -156,7 +176,7 @@ manager.get('/auth/nextcloud/callback', function (req, res) {
                 res.end();
                 return;
             }
-            console.log(result.affectedRows + ' records found ' + util.inspect(result));
+            console.log(result.length + ' records found ' + util.inspect(result));
 
             if (result && result.length) {
                 sql = `DELETE FROM wastecalendar.oc_user WHERE oc_userid = ${db.escape(user.data.user_id)}`;
@@ -169,42 +189,10 @@ manager.get('/auth/nextcloud/callback', function (req, res) {
                     }
                     console.log(result.affectedRows + ' records updated ' + util.inspect(result));
 
-                    insertUser(user, function (error, user) {
-                        if (error) {
-                            console.error(error);
-                            res.statusCode = 500;
-                            res.end();
-                            return;
-                        }
-                        refreshUser(user, function (error, updatedUser) {
-                            if (error) {
-                                console.error(error);
-                                res.statusCode = 500;
-                                res.end();
-                                return;
-                            }
-                            return res.send(updatedUser.accessToken);
-                        });
-                    });
+                    insertAndUpdateUser(user, res);
                 });
             } else {
-                insertUser(user, function (error, user) {
-                    if (error) {
-                        console.error(error);
-                        res.statusCode = 500;
-                        res.end();
-                        return;
-                    }
-                    refreshUser(user, function (error, updatedUser) {
-                        if (error) {
-                            console.error(error);
-                            res.statusCode = 500;
-                            res.end();
-                            return;
-                        }
-                        return res.send(updatedUser.accessToken);
-                    });
-                });
+                insertAndUpdateUser(user, res);
             }
         });
     });
@@ -502,7 +490,7 @@ manager.get('/amz', function (req, res) {
 });
 
 manager.listen(8081, function () {
-    console.log('Nextcloud oauth2 client endpoint listening on port 8080!');
+    console.log('Nextcloud oauth2 client endpoint listening on port 8081!');
 });
 
 /*
