@@ -13,6 +13,8 @@ var ICAL = require('ical.js');
 var db = require('./database');
 var nextcloudAuth = require('./ncoauth2');
 
+console.log("Database: " + db);
+
 /*
 var nextcloudAuth = new ClientOAuth2({
     clientId: '8phIFMUJdLFneoFJLEaRKI66JqEbuelJ274KI4Gy5pcFMszJMXJtagkt2AjTxTkF',
