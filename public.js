@@ -62,8 +62,8 @@ function handleDisconnect() {
 handleDisconnect();
 
 var nextcloudAuth = new ClientOAuth2({
-    clientId: 'Aov6Si2mqV94AR9fh3Carwh3cNmpux9LvEShjtiExQ7x9I1erK19Lp4AMjGjuWaa',
-    clientSecret: 'J9ZT1u6VXJewdlZ3XSX44aALq8NNw8voqBssU32FgAeDJ0y3nEJOBNkPoEbGkayX',
+    clientId: '8phIFMUJdLFneoFJLEaRKI66JqEbuelJ274KI4Gy5pcFMszJMXJtagkt2AjTxTkF',
+    clientSecret: 'OPrt8WfF7tKHV7ufdqhqfO8SgOIYAofqQPT6jqK9S2tqsDghL4G0tvgMbRcFmVSM',
     accessTokenUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/api/v1/token',
     authorizationUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/authorize',
     redirectUri: 'https://ep.vchrist.at/nodejs/wastereminder/auth/nextcloud/callback',
