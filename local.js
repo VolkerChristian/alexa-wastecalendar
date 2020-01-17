@@ -6,12 +6,14 @@
 'use strict';
 
 const express = require('express');
-var ClientOAuth2 = require('client-oauth2');
+//var ClientOAuth2 = require('client-oauth2');
 var util = require('util');
 var request = require('request');
 var ICAL = require('ical.js');
 var db = require('database.js');
+var nextcloudAuth = require('ncoauth2');
 
+/*
 var nextcloudAuth = new ClientOAuth2({
     clientId: '8phIFMUJdLFneoFJLEaRKI66JqEbuelJ274KI4Gy5pcFMszJMXJtagkt2AjTxTkF',
     clientSecret: 'OPrt8WfF7tKHV7ufdqhqfO8SgOIYAofqQPT6jqK9S2tqsDghL4G0tvgMbRcFmVSM',
@@ -20,6 +22,7 @@ var nextcloudAuth = new ClientOAuth2({
     redirectUri: 'https://ep.vchrist.at/wastereminder/auth/nextcloud/callback',
     scopes: []
 });
+*/
 
 Date.prototype.toUnixTime = function () {
     return this.getTime() / 1000 | 0;
