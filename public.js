@@ -62,11 +62,11 @@ function handleDisconnect() {
 handleDisconnect();
 
 var nextcloudAuth = new ClientOAuth2({
-    clientId: 'BAQwGDpEKCRtl7Kn21xfXaYxsS3XewlV1EqbYrUZP8jeVI6edo6l0WBX6pfc8hrc',
-    clientSecret: 'jg9WPACcgIbDlq5FT7iIx7YL6gup4QRtvZNBBE6DjbVK4vPDyb4RFLholM65b7tP',
+    clientId: 'Aov6Si2mqV94AR9fh3Carwh3cNmpux9LvEShjtiExQ7x9I1erK19Lp4AMjGjuWaa',
+    clientSecret: 'J9ZT1u6VXJewdlZ3XSX44aALq8NNw8voqBssU32FgAeDJ0y3nEJOBNkPoEbGkayX',
     accessTokenUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/api/v1/token',
     authorizationUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/authorize',
-    redirectUri: 'http://calisto.home.vchrist.at:8081/wastereminder/auth/nextcloud/callback',
+    redirectUri: 'http://ep.vchrist.at/nodejs/wastereminder/auth/nextcloud/callback',
     scopes: []
 });
 
