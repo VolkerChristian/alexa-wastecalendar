@@ -67,7 +67,7 @@ var nextcloudAuth = new ClientOAuth2({
     clientSecret: 'OPrt8WfF7tKHV7ufdqhqfO8SgOIYAofqQPT6jqK9S2tqsDghL4G0tvgMbRcFmVSM',
     accessTokenUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/api/v1/token',
     authorizationUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/authorize',
-    redirectUri: 'https://ep.vchrist.at/nodejs/wastereminder/auth/nextcloud/callback',
+    redirectUri: 'https://ep.vchrist.at/wastereminder/auth/nextcloud/callback',
     scopes: []
 });
 
