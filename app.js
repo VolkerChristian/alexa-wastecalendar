@@ -152,8 +152,8 @@ manager.get('/auth/nextcloud/callback', function (req, res) {
         db.query(sql, function (err, result) {
             if (err) {
                 console.error(err.stack);
-                result.statusCode = 500;
-                result.end();
+                res.statusCode = 500;
+                res.end();
                 return;
             }
             console.log(result.affectedRows + ' records found ' + util.inspect(result));
@@ -163,8 +163,8 @@ manager.get('/auth/nextcloud/callback', function (req, res) {
                 db.query(sql, function (err, result) {
                     if (err) {
                         console.error(err.stack);
-                        result.statusCode = 500;
-                        result.end();
+                        res.statusCode = 500;
+                        res.end();
                         return;
                     }
                     console.log(result.affectedRows + ' records updated ' + util.inspect(result));
@@ -172,15 +172,15 @@ manager.get('/auth/nextcloud/callback', function (req, res) {
                     insertUser(user, function (error, user) {
                         if (error) {
                             console.error(error);
-                            result.statusCode = 500;
-                            result.end();
+                            res.statusCode = 500;
+                            res.end();
                             return;
                         }
                         refreshUser(user, function (error, updatedUser) {
                             if (error) {
                                 console.error(error);
-                                result.statusCode = 500;
-                                result.end();
+                                res.statusCode = 500;
+                                res.end();
                                 return;
                             }
                             return res.send(updatedUser.accessToken);
@@ -191,15 +191,15 @@ manager.get('/auth/nextcloud/callback', function (req, res) {
                 insertUser(user, function (error, user) {
                     if (error) {
                         console.error(error);
-                        result.statusCode = 500;
-                        result.end();
+                        res.statusCode = 500;
+                        res.end();
                         return;
                     }
                     refreshUser(user, function (error, updatedUser) {
                         if (error) {
                             console.error(error);
-                            result.statusCode = 500;
-                            result.end();
+                            res.statusCode = 500;
+                            res.end();
                             return;
                         }
                         return res.send(updatedUser.accessToken);
@@ -276,14 +276,6 @@ function sendProactiveEvent(apiEndpoint, apiAccessToken, amzUserId) {
                     }
                 }
             },
-            /*
-                        localizedAttributes: [{
-                                locale: 'de-DE',
-                                providerName: 'Alexa Event Beispiel',
-                                contentName: 'Das ist ein Event'
-                            }
-                        ],
-            */
             relevantAudience: {
                 type: 'Unicast',
                 payload: {
@@ -391,7 +383,7 @@ function refreshAmzProactiveEndpointToken(cb) {
 }
 
 function getAmzProactiveEndpointAccessToken(amz_skillid, oc_userid, cb) {
-    var sql = 'select u.amz_userid, u.amz_apiendpoint, u.oc_userid, e.amzep_accesstoken, e.amzep_expires from wastecalendar.amz_user u left outer join wastecalendar.amz_endpoint e on u.amz_skillid = e.amzep_skillid WHERE u.oc_userid = ? AND u.amz_skillid = ?';
+    var sql = 'select u.amz_userid, u.amz_permissions, u.amz_apiendpoint, u.oc_userid, e.amzep_accesstoken, e.amzep_expires from wastecalendar.amz_user u left outer join wastecalendar.amz_endpoint e on u.amz_skillid = e.amzep_skillid WHERE u.oc_userid = ? AND u.amz_skillid = ?';
 
     console.log('AMZ: Looking for access-token for skill \'' + amz_skillid + '\' and user \'' + oc_userid + '\'');
 
@@ -426,6 +418,7 @@ function getAmzProactiveEndpointAccessToken(amz_skillid, oc_userid, cb) {
                     }
                     return cb(err, {
                         userid: result[0].amz_userid,
+                        permission: result[0].amz_permissions,
                         endpoint: result[0].amz_apiendpoing,
                         expires: body.expires_in,
                         token: body.access_token
@@ -465,6 +458,7 @@ function getAmzProactiveEndpointAccessToken(amz_skillid, oc_userid, cb) {
                         }
                         return cb(err, {
                             userid: result[0].amz_userid,
+                            permission: result[0].amz_permissions,
                             endpoint: result[0].amz_apiendpoint,
                             expires: amzUpdatedToken[0].amzep_expires,
                             token: amzUpdatedToken[0].amzep_accesstoken
@@ -476,6 +470,7 @@ function getAmzProactiveEndpointAccessToken(amz_skillid, oc_userid, cb) {
                 // Token not expired
                 return cb(err, {
                     userid: result[0].amz_userid,
+                    permission: result[0].amz_permissions,
                     endpoint: result[0].amz_apiendpoint,
                     expires: result[0].amzep_expires,
                     token: result[0].amzep_accesstoken
@@ -499,7 +494,9 @@ manager.get('/amz', function (req, res) {
             res.end();
             return;
         }
-        sendProactiveEvent(accessToken.endpoint, accessToken.token, accessToken.userid);
+        if (accessToken.permission) {
+            sendProactiveEvent(accessToken.endpoint, accessToken.token, accessToken.userid);
+        }
         return res.send('SkillId: ' + skillid + ': ' + '\n\tUserId: ' + accessToken.userid + '\n\tEndpoint: ' + accessToken.endpoint + '\n\tToken: ' + accessToken.token + '\n\tExpires: ' + accessToken.expires + '\n');
     });
 });
