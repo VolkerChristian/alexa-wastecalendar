@@ -235,50 +235,6 @@ function processCalendar(user, cb) {
     });
 }
 
-function sendProactiveEvent(apiEndpoint, apiAccessToken, amzUserId) {
-    let timestamp = new Date();
-
-    // Sets expiryTime 23 hours ahead of the current date and time
-    let expiryTime = new Date();
-    expiryTime.setHours(expiryTime.getHours() + 23);
-    expiryTime = expiryTime.toISOString();
-
-    var request = require('request');
-    var options = {
-        method: 'POST',
-        url: apiEndpoint + '/v1/proactiveEvents/stages/development',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + apiAccessToken
-        },
-        body: JSON.stringify({
-            timestamp: timestamp.toISOString(),
-            referenceId: 'wastecalendar-event-' + timestamp.toUnixTime(),
-            expiryTime: expiryTime,
-            event: {
-                name: 'AMAZON.TrashCollectionAlert.Activated',
-                payload: {
-                    alert: {
-                        garbageTypes: ['LANDFILL', 'RECYCLABLE_PLASTICS', 'WASTE_PAPER'],
-                        collectionDayOfWeek: 'TUESDAY'
-                    }
-                }
-            },
-            relevantAudience: {
-                type: 'Unicast',
-                payload: {
-                    user: amzUserId
-                }
-            }
-        })
-
-    };
-    request(options, function (error, response) {
-        if (error) throw new Error(error);
-        console.log(response.body);
-    });
-}
-
 manager.get('/test', function (req, res) {
     //    sendProactiveEvent();
     if (db.state === 'disconnected') {
@@ -465,6 +421,50 @@ function getAmzProactiveEndpointAccessToken(amz_skillid, oc_userid, cb) {
                 });
             }
         }
+    });
+}
+
+function sendProactiveEvent(apiEndpoint, apiAccessToken, amzUserId) {
+    let timestamp = new Date();
+
+    // Sets expiryTime 23 hours ahead of the current date and time
+    let expiryTime = new Date();
+    expiryTime.setHours(expiryTime.getHours() + 23);
+    expiryTime = expiryTime.toISOString();
+
+    var request = require('request');
+    var options = {
+        method: 'POST',
+        url: apiEndpoint + '/v1/proactiveEvents/stages/development',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + apiAccessToken
+        },
+        body: JSON.stringify({
+            timestamp: timestamp.toISOString(),
+            referenceId: 'wastecalendar-event-' + timestamp.toUnixTime(),
+            expiryTime: expiryTime,
+            event: {
+                name: 'AMAZON.TrashCollectionAlert.Activated',
+                payload: {
+                    alert: {
+                        garbageTypes: ['LANDFILL', 'RECYCLABLE_PLASTICS', 'WASTE_PAPER'],
+                        collectionDayOfWeek: 'TUESDAY'
+                    }
+                }
+            },
+            relevantAudience: {
+                type: 'Unicast',
+                payload: {
+                    user: amzUserId
+                }
+            }
+        })
+
+    };
+    request(options, function (error, response) {
+        if (error) throw new Error(error);
+        console.log(response.body);
     });
 }
 
