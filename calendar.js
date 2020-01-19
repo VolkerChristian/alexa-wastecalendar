@@ -36,11 +36,6 @@ function processCalendar(user, cb) {
     });
 }
 
-function getCalendar(user, cb) {
-
-}
-
 module.exports = {
-    getCalendar,
     processCalendar
 };

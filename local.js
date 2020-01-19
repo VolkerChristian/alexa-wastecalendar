@@ -12,7 +12,6 @@ var ICAL = require('ical.js');
 var mysql = require('mysql');
 
 var {
-    nextcloudAuth,
     getNCUser
 } = require(__dirname + '/ncoauth2');
 
@@ -25,8 +24,7 @@ var {
 } = require(__dirname + '/database.js');
 
 var {
-    processCalendar,
-    getCalendar
+    processCalendar
 } = require('./calendar.js');
 
 Date.prototype.toUnixTime = function () {
@@ -144,7 +142,6 @@ function sendProactiveEvent(user, cb) {
                 }
             }
         })
-
     };
     request(options, function (err, response) {
         cb(err, response);

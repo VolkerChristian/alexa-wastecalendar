@@ -94,8 +94,6 @@ var pub = express.Router();
 
 pub.get('/', function(req, res) {
     var uri = 'https://ep.vchrist.at/nodejs/wastereminder/auth/nextcloud';
-
-    console.log('hier bin ich ' + uri);
     res.redirect(uri);
 });
 
