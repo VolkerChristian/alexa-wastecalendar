@@ -7,56 +7,9 @@ const Alexa = require('ask-sdk-core');
 var request = require('request');
 var util = require('util');
 var mysql = require('mysql');
-
-var db;
-
-function handleDisconnect() {
-    db = mysql.createConnection({
-        //        host: 'proliant.home.vchrist.at',
-        host: '192.168.1.3',
-        user: 'wastecalendar',
-        password: '!!!SoMaSi01!!!'
-    });
-
-    db.connect(function onConnect(err) {
-        if (err) {
-            console.log('error when connecting to db:', err);
-            setTimeout(handleDisconnect, 1000);
-        } else {
-            console.log('MySQL Connected!');
-        }
-    });
-
-    db.origQuery = db.query;
-
-    db.query = function (sql, values, cb) {
-        console.log('Query start: ' + sql);
-        if (!cb) {
-            cb = values;
-            values = null;
-        }
-        db.origQuery(sql, values, function (err, result) {
-            console.log('Query end');
-            if (err) {
-                console.error(err.stack);
-                setTimeout(handleDisconnect, 1000);
-            }
-            cb(err, result);
-        });
-    };
-
-    db.on('error', function (error) {
-        console.log('On Error: ' + error);
-        if (!error.fatal) return;
-        if (error.code !== 'PROTOCOL_CONNECTION_LOST' && error.code !== 'PROTOCOL_PACKETS_OUT_OF_ORDER' && error.code !== 'ECONNREFUSED') throw error;
-
-        console.log('> Re-connecting lost MySQL connection: ' + error.stack);
-
-        setTimeout(handleDisconnect, 1000);
-    });
-}
-
-handleDisconnect();
+var {
+    db
+} = require(__dirname + '/database.js');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -166,9 +119,9 @@ const ProactiveEventHandler = {
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('Permissions' + (typeof handlerInput.requestEnvelope.request.body !== 'undefined') ? 'JA' : 'NEIN');
         
-        var sql = `UPDATE wastecalendar.amz_user SET amz_permissions = ${(typeof handlerInput.requestEnvelope.request.body !== 'undefined') ? 1 : 0} WHERE amz_userid = ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
+        var sql = `UPDATE wastecalendar.amz_user SET amz_permissions = ${(typeof handlerInput.requestEnvelope.request.body !== 'undefined') ? 1 : 0} WHERE amz_userid = ${db().escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
         console.log('SQL: ' + sql);
-        db.query(sql, function(err, result) {
+        db().query(sql, function(err, result) {
             if (err) {
                 console.error(err.stack);
             } else {
@@ -202,9 +155,9 @@ const AccountLinkedEventHandler = {
             var oc_data = JSON.parse(response.body);
             console.log('OC Response: ' + JSON.stringify(oc_data, null, 4));
                     
-            var sql = `UPDATE wastecalendar.amz_user SET oc_userid = ${db.escape(oc_data.ocs.data.id)}, amz_accountlinked = 1 WHERE amz_userid = ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
+            var sql = `UPDATE wastecalendar.amz_user SET oc_userid = ${db().escape(oc_data.ocs.data.id)}, amz_accountlinked = 1 WHERE amz_userid = ${db().escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
             console.log('SQL: ' + sql);
-            db.query(sql, function(err, result) {
+            db().query(sql, function (err, result) {
                 if (err) {
                     console.error(err.stack);
                 } else {
@@ -226,13 +179,13 @@ const SkillEnabledEventHandler = {
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         
         var sql = `INSERT INTO wastecalendar.amz_user (amz_skillid, amz_userid, amz_apiendpoint, amz_apiaccesstoken) VALUES (
-            ${db.escape(handlerInput.requestEnvelope.context.System.application.applicationId)},
-            ${db.escape(handlerInput.requestEnvelope.context.System.user.userId)},
-            ${db.escape(handlerInput.requestEnvelope.context.System.apiEndpoint)},
-            ${db.escape(handlerInput.requestEnvelope.context.System.apiAccessToken)}
+            ${db().escape(handlerInput.requestEnvelope.context.System.application.applicationId)},
+            ${db().escape(handlerInput.requestEnvelope.context.System.user.userId)},
+            ${db().escape(handlerInput.requestEnvelope.context.System.apiEndpoint)},
+            ${db().escape(handlerInput.requestEnvelope.context.System.apiAccessToken)}
         )`;
         console.log('SQL: ' + sql);
-        db.query(sql, function(err, result) {
+        db().query(sql, function(err, result) {
             if (err) {
                 console.error(err.stack);
             } else {
@@ -254,12 +207,12 @@ const SkillDisabledEventHandler = {
         console.log('Persistence State ' + handlerInput.requestEnvelope.request.body.userInformationPersistenceStatus);
         
         var sql = `DELETE FROM wastecalendar.amz_user WHERE amz_userid = ${
-                db.escape(handlerInput.requestEnvelope.context.System.user.userId)
+                db().escape(handlerInput.requestEnvelope.context.System.user.userId)
             } AND amz_skillid = ${
-                db.escape(handlerInput.requestEnvelope.context.System.application.applicationId)
+                db().escape(handlerInput.requestEnvelope.context.System.application.applicationId)
             }`;
         console.log('SQL: ' + sql);
-        db.query(sql, function(err, result) {
+        db().query(sql, function(err, result) {
             if (err) {
                 console.error(err.stack);
             } else {

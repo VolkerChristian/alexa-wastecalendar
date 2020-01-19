@@ -10,7 +10,11 @@ var util = require('util');
 var request = require('request');
 var mysql = require('mysql');
 var nextcloudAuth = require(__dirname + '/ncoauth2');
+var {
+    db
+} = require(__dirname + '/database.js');
 
+/*
 var db;
 
 function handleDisconnect() {
@@ -23,7 +27,7 @@ function handleDisconnect() {
 
     db.connect(function onConnect(err) {
         if (err) {
-            console.log('error when connecting to db:', err);
+//            console.log('error when connecting to db:', err);
             setTimeout(handleDisconnect, 1000);
         } else {
             console.log('MySQL Connected!');
@@ -60,6 +64,7 @@ function handleDisconnect() {
 }
 
 handleDisconnect();
+*/
 
 function insertUser(user, cb) {
     console.log('AUTH: Create account for user ' + user.data.user_id);
@@ -73,7 +78,7 @@ function insertUser(user, cb) {
         oc_expires: user.expires
     };
 
-    db.query(sql, ocUser, function (err, result) {
+    db().query(sql, ocUser, function (err, result) {
         if (!err) {
             console.log(result.affectedRows + ' record inserted ' + util.inspect(result));
         }
@@ -104,7 +109,7 @@ function refreshUser(user, cb) {
 
         var sql_UpdateToken = 'UPDATE wastecalendar.oc_user SET ? WHERE ?';
 
-        db.query(sql_UpdateToken, updatedToken, function (err, result) {
+        db().query(sql_UpdateToken, updatedToken, function (err, result) {
             if (!err) {
                 console.log(result.affectedRows + ' record updated');
             }
@@ -173,7 +178,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
 */
         var sql = `SELECT * FROM wastecalendar.oc_user WHERE oc_userid = ${db.escape(user.data.user_id)}`;
 
-        db.query(sql, function (err, result) {
+        db().query(sql, function (err, result) {
             if (err) {
                 console.error(err.stack);
                 res.statusCode = 500;
@@ -184,7 +189,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
 
             if (result && result.length) {
                 sql = `DELETE FROM wastecalendar.oc_user WHERE oc_userid = ${db.escape(user.data.user_id)}`;
-                db.query(sql, function (err, result) {
+                db().query(sql, function (err, result) {
                     if (err) {
                         console.error(err.stack);
                         res.statusCode = 500;
