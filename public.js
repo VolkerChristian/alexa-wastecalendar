@@ -132,7 +132,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
 // Todo: Check if user exists ... 
         });
 */
-        var sql = `SELECT * FROM wastecalendar.oc_user WHERE oc_userid = ${db.escape(user.data.user_id)}`;
+        var sql = `SELECT * FROM wastecalendar.oc_user WHERE oc_userid = ${db().escape(user.data.user_id)}`;
 
         db().query(sql, function (err, result) {
             if (err) {
@@ -144,7 +144,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
             console.log(result.length + ' records found ' + util.inspect(result));
 
             if (result && result.length) {
-                sql = `DELETE FROM wastecalendar.oc_user WHERE oc_userid = ${db.escape(user.data.user_id)}`;
+                sql = `DELETE FROM wastecalendar.oc_user WHERE oc_userid = ${db().escape(user.data.user_id)}`;
                 db().query(sql, function (err, result) {
                     if (err) {
                         console.error(err.stack);
