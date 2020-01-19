@@ -9,7 +9,7 @@ const express = require('express');
 var util = require('util');
 var request = require('request');
 var mysql = require('mysql');
-var nextcloudAuth = require(__dirname + '/ncoauth2');
+var { nextcloudAuth } = require(__dirname + '/ncoauth2');
 var {
     db
 } = require(__dirname + '/database.js');
