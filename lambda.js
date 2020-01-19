@@ -170,7 +170,6 @@ const AccountLinkedEventHandler = {
 
 const SkillEnabledEventHandler = {
     canHandle(handlerInput) {
-        //        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.SkillEnabled';
     },
     handle(handlerInput) {
