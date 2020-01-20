@@ -7,8 +7,6 @@
 
 const express = require('express');
 var util = require('util');
-//var request = require('request');
-//var mysql = require('mysql');
 var uuid = require('uuid/v1');
 var cookieParser = require('cookie-parser');
 var {
@@ -99,16 +97,12 @@ pub.use(cookieParser());
 
 pub.get('/', function (req, res) {
     var uri = nextcloudAuth.getLoginUri();
-//    var uri = 'http://localhost:8080/wastereminder/return';
     res.redirect(uri);
 });
-/*
-pub.get('/return', function(req, res) {
-    console.log('Cookie: ' + JSON.stringify(req.cookies, null, 4));
-    res.end();
-});
-*/
-var auth = {};
+
+var cookieStore = {};
+
+// Todo: Manage expired cookies
 
 nextcloudAuth.setLoginUri('https://ep.vchrist.at/nodejs/wastereminder/auth/nextcloud');
 
@@ -118,21 +112,22 @@ pub.get('/auth/nextcloud', function (req, res) {
     }
 
     var cookie = uuid();
-    var state = uuid();
-
-    console.log()
 
     res.cookie('grant', cookie, {
         domain: 'ep.vchrist.at',
         path: '/nodejs/wastereminder/auth/nextcloud'
     });
-    auth[cookie] = state;
+
+    cookieStore[cookie] = {
+        state: uuid(),
+        date: Date()
+    };
 
     console.log('Response grant-cookie: ' + JSON.stringify(cookie, null, 4));
-    console.log('Response state of grant-cookie: ' + auth[req.cookies.grant]);
+    console.log('Response state of grant-cookie: ' + cookieStore[cookie].state);
 
     var stateOpt = {
-        state: state
+        state: cookieStore[cookie].state
     };
 
     /*
@@ -155,31 +150,16 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
         3. Remove the cookie from the store
     */
     console.log('Request cookie: ' + JSON.stringify(req.cookies, null, 4));
-    console.log('Request state of grant-cookie: ' + auth[req.cookies.grant]);
+    console.log('Request state of grant-cookie: ' + cookieStore[req.cookies.grant]);
 
     var stateOpt = {
-        state: auth[req.cookies.grant]
+        state: cookieStore[req.cookies.grant].state
     };
 
-    delete auth[req.cookies.grant];
+    delete cookieStore[req.cookies.grant];
+    res.clearCookie('grant');
 
     nextcloudAuth.code.getToken(req.originalUrl, stateOpt).then(function (user) {
-        //console.log(user);
-        /*
-                var options = {
-                    'method': 'GET',
-                    'url': 'https://cloud.vchrist.at/ocs/v2.php/cloud/user?format=json',
-                    'headers': {
-                        'Authorization': 'Bearer ' + user.accessToken
-                    }
-                };
-
-                request(options, function (error, response) {
-                    console.log('Error: ' + error);
-                    console.log('Response: ' + response);
-        // Todo: Check if user exists ... 
-                });
-        */
         var sql = `SELECT * FROM wastecalendar.oc_user WHERE oc_userid = ${db().escape(user.data.user_id)}`;
 
         db().query(sql, function (err, result) {
