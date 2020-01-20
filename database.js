@@ -2,7 +2,6 @@
 /*jslint node: true */
 
 var mysql = require('mysql');
-var util = require('util');
 var request = require('request');
 
 var _db;

@@ -1,7 +1,6 @@
 /*jshint esversion: 8 */
 /*jslint node: true */
 
-var util = require('util');
 var request = require('request');
 var ICAL = require('ical.js');
 

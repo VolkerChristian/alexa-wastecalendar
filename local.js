@@ -6,10 +6,7 @@
 'use strict';
 
 const express = require('express');
-var util = require('util');
 var request = require('request');
-var ICAL = require('ical.js');
-var mysql = require('mysql');
 
 var {
     getNCUser

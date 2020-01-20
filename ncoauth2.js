@@ -3,7 +3,6 @@
 
 'use strict';
 
-
 var ClientOAuth2 = require('client-oauth2');
 var {updateUserToken} = require(__dirname + ('/database'));
 
@@ -11,7 +10,7 @@ class MyClientOAuth2 extends ClientOAuth2 {
     constructor(data) {
         super(data);
     }
-    
+
     getLoginUri() {
         return this.loginUri;
     }
