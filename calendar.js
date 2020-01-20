@@ -4,7 +4,6 @@
 var util = require('util');
 var request = require('request');
 var ICAL = require('ical.js');
-var nextcloudAuth = require(__dirname + '/ncoauth2');
 
 
 function processCalendar(user, cb) {
