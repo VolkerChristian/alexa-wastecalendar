@@ -131,7 +131,7 @@ pub.get('/auth/nextcloud', function (req, res) {
         date: Date()
     };
 
-    setInterval(function (cookie) {
+    setTimeout(function (cookie) {
         console.log('Cookie ' + cookie + ' expired.');
         delete cookieStore[cookie];
     }, 600/** 1000 */, cookie);
