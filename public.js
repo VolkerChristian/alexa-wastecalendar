@@ -156,14 +156,15 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
     */
     console.log('Request cookie: ' + JSON.stringify(req.cookies, null, 4));
     console.log('Request state of grant-cookie: ' + auth[req.cookies.grant]);
+
     var stateOpt = {
-        state: auth[req.cookies.grant]
+        state: auth[req.cookies.grant] + 'hihihi'
     };
 
     delete auth[req.cookies.grant];
 
     nextcloudAuth.code.getToken(req.originalUrl, stateOpt).then(function (user) {
-        console.log(user);
+        //console.log(user);
         /*
                 var options = {
                     'method': 'GET',
@@ -185,8 +186,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
             if (err) {
                 console.error(err.stack);
                 res.statusCode = 500;
-                res.end();
-                return;
+                return res.end();
             }
             console.log(result.length + ' records found ' + util.inspect(result));
 
@@ -196,8 +196,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
                     if (err) {
                         console.error(err.stack);
                         res.statusCode = 500;
-                        res.end();
-                        return;
+                        return res.end();
                     }
                     console.log(result.affectedRows + ' records updated ' + util.inspect(result));
 
@@ -207,6 +206,8 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
                 insertAndUpdateUser(user, res);
             }
         });
+    }).catch(function(err) {
+        console.error('Auth error: Not authorized');
     });
 });
 
