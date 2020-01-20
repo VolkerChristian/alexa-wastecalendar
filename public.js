@@ -134,7 +134,7 @@ pub.get('/auth/nextcloud', function (req, res) {
     setTimeout(function (cookie) {
         console.log('Cookie ' + cookie + ' expired.');
         delete cookieStore[cookie];
-    }, 600/** 1000 */, cookie);
+    }, 600 * 1000, cookie);
 
     console.log('Response grant-cookie: ' + JSON.stringify(cookie, null, 4));
     console.log('Response state of grant-cookie: ' + JSON.stringify(cookieStore[cookie].state, null, 4));
