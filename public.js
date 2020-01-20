@@ -102,12 +102,12 @@ pub.get('/', function (req, res) {
 //    var uri = 'http://localhost:8080/wastereminder/return';
     res.redirect(uri);
 });
-
+/*
 pub.get('/return', function(req, res) {
     console.log('Cookie: ' + JSON.stringify(req.cookies, null, 4));
     res.end();
 });
-
+*/
 var auth = {};
 
 nextcloudAuth.setLoginUri('https://ep.vchrist.at/nodejs/wastereminder/auth/nextcloud');
@@ -120,16 +120,21 @@ pub.get('/auth/nextcloud', function (req, res) {
     var cookie = uuid();
     var state = uuid();
 
+    console.log()
+
     res.cookie('grant', cookie, {
         domain: 'ep.vchrist.at',
         path: '/nodejs/wastereminder/auth/nextcloud'
     });
-    
+    auth[cookie] = state;
+
+    console.log('Response grant-cookie: ' + JSON.stringify(cookie, null, 4));
+    console.log('Response state of grant-cookie: ' + auth[req.cookies.grant]);
+
     var stateOpt = {
         state: state
     };
 
-    auth[cookie] = state;
     /*
         1. Create a cookie and store the stateOpt in the store indext by the cookie.
         2. Set the cookie in the uri for the request
@@ -144,14 +149,13 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
         return res.status(500).send('No Database connection!\n');
     }
 
-    console.log('Cookie: ' + JSON.stringify(req.cookies, null, 4));
-
     /*
         1. Retrieve the cookie from the request
         2. Look for the stateOpt in the store indext by the cookie
         3. Remove the cookie from the store
     */
-
+    console.log('Request cookie: ' + JSON.stringify(req.cookies, null, 4));
+    console.log('Request state of grant-cookie: ' + auth[req.cookies.grant]);
     var stateOpt = {
         state: auth[req.cookies.grant]
     };
