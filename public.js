@@ -132,11 +132,12 @@ pub.get('/auth/nextcloud', function (req, res) {
     };
 
     setInterval(function (cookie) {
+        console.log('Cookie ' + cookie + ' expired.');
         delete cookieStore[cookie];
-    }, 600 * 1000, cookie);
+    }, 600/** 1000 */, cookie);
 
     console.log('Response grant-cookie: ' + JSON.stringify(cookie, null, 4));
-    console.log('Response state of grant-cookie: ' + cookieStore[cookie].state);
+    console.log('Response state of grant-cookie: ' + JSON.stringify(cookieStore[cookie].state, null, 4));
 
     var stateOpt = {
         state: cookieStore[cookie].state
@@ -158,7 +159,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
         3. Remove the cookie from the store
     */
     console.log('Request cookie: ' + JSON.stringify(req.cookies, null, 4));
-    console.log('Request state of grant-cookie: ' + cookieStore[req.cookies.grant]);
+    console.log('Request state of grant-cookie: ' + JSON.stringify(cookieStore[req.cookies.grant].state));
 
     var stateOpt = {
         state: cookieStore[req.cookies.grant].state
