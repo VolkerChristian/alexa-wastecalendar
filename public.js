@@ -158,11 +158,14 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
         2. Look for the stateOpt in the store indext by the cookie
         3. Remove the cookie from the store
     */
+
+    var state = cookieStore[req.cookies.grant] ? cookieStore[req.cookies.grant].state : '';
+
     console.log('Request cookie: ' + JSON.stringify(req.cookies, null, 4));
-    console.log('Request state of grant-cookie: ' + JSON.stringify(cookieStore[req.cookies.grant].state));
+    console.log('Request state of grant-cookie: ' + JSON.stringify(state));
 
     var stateOpt = {
-        state: cookieStore[req.cookies.grant].state
+        state: state
     };
 
     delete cookieStore[req.cookies.grant];
