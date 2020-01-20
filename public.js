@@ -110,6 +110,14 @@ pub.get('/auth/nextcloud', function (req, res) {
     if (db.state === 'disconnected') {
         return res.status(500).send('No Database connection!\n');
     }
+/*
+    1. Create a cookie and store the stateOpt in the store indext by the cookie.
+    2. Set the cookie in the uri for the request
+    4. Create a state value for the oauth handshake
+    3. Store the state in a state-store indexed by the cooki value
+    4. Set the state in the authorization code grant request to the authorization server
+    5. Set a timeout (10Min) for the cookie
+*/
 
     var cookie = uuid();
 
@@ -123,6 +131,10 @@ pub.get('/auth/nextcloud', function (req, res) {
         date: Date()
     };
 
+    setInterval(function (cookie) {
+        delete cookieStore[cookie];
+    }, 600 * 1000, cookie);
+
     console.log('Response grant-cookie: ' + JSON.stringify(cookie, null, 4));
     console.log('Response state of grant-cookie: ' + cookieStore[cookie].state);
 
@@ -130,10 +142,6 @@ pub.get('/auth/nextcloud', function (req, res) {
         state: cookieStore[cookie].state
     };
 
-    /*
-        1. Create a cookie and store the stateOpt in the store indext by the cookie.
-        2. Set the cookie in the uri for the request
-    */
     var uri = nextcloudAuth.code.getUri(stateOpt);
     console.log(util.inspect(uri));
     res.redirect(uri);
@@ -186,7 +194,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
                 insertAndUpdateUser(user, res);
             }
         });
-    }).catch(function(err) {
+    }).catch(function (err) {
         console.error('Auth error: Not authorized');
         res.status(401).send('Auth error: Not authorized');
     });
