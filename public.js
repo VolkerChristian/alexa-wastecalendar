@@ -158,7 +158,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
     console.log('Request state of grant-cookie: ' + auth[req.cookies.grant]);
 
     var stateOpt = {
-        state: auth[req.cookies.grant] + 'fff'
+        state: auth[req.cookies.grant]
     };
 
     delete auth[req.cookies.grant];
