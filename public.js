@@ -158,7 +158,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
     console.log('Request state of grant-cookie: ' + auth[req.cookies.grant]);
 
     var stateOpt = {
-        state: auth[req.cookies.grant] + 'hihihi'
+        state: auth[req.cookies.grant] + 'fff'
     };
 
     delete auth[req.cookies.grant];
@@ -208,6 +208,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
         });
     }).catch(function(err) {
         console.error('Auth error: Not authorized');
+        res.status(401).send('Auth error: Not authorized');
     });
 });
 
