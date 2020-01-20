@@ -123,7 +123,9 @@ pub.get('/auth/nextcloud', function (req, res) {
 
     res.cookie('grant', cookie, {
         domain: 'ep.vchrist.at',
-        path: '/nodejs/wastereminder/auth/nextcloud'
+        path: '/nodejs/wastereminder/auth/nextcloud',
+        httpOnly: true,
+        secure: true
     });
 
     cookieStore[cookie] = {
@@ -169,7 +171,14 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
     };
 
     delete cookieStore[req.cookies.grant];
-    res.clearCookie('grant');
+
+    res.clearCookie('grant', {
+        domain: 'ep.vchrist.at',
+        path: '/nodejs/wastereminder/auth/nextcloud',
+        httpOnly: true,
+        secure: true,
+        expires: new Date(1)
+    });
 
     nextcloudAuth.code.getToken(req.originalUrl, stateOpt).then(function (user) {
         var sql = `SELECT * FROM wastecalendar.oc_user WHERE oc_userid = ${db().escape(user.data.user_id)}`;
@@ -184,6 +193,7 @@ pub.get('/auth/nextcloud/callback', function (req, res) {
 
             if (result && result.length) {
                 sql = `DELETE FROM wastecalendar.oc_user WHERE oc_userid = ${db().escape(user.data.user_id)}`;
+                
                 db().query(sql, function (err, result) {
                     if (err) {
                         console.error(err.stack);
