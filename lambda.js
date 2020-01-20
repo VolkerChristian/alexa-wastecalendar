@@ -6,7 +6,6 @@
 const Alexa = require('ask-sdk-core');
 var request = require('request');
 var util = require('util');
-var mysql = require('mysql');
 var {
     db
 } = require(__dirname + '/database.js');
