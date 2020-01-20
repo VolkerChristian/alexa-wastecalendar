@@ -7,7 +7,21 @@
 var ClientOAuth2 = require('client-oauth2');
 var {updateUserToken} = require(__dirname + ('/database'));
 
-var nextcloudAuth = new ClientOAuth2({
+class MyClientOAuth2 extends ClientOAuth2 {
+    constructor(data) {
+        super(data);
+    }
+    
+    getLoginUri() {
+        return this.loginUri;
+    }
+
+    setLoginUri(uri) {
+        this.loginUri = uri;
+    }
+}
+
+var nextcloudAuth = new MyClientOAuth2({
     clientId: '8phIFMUJdLFneoFJLEaRKI66JqEbuelJ274KI4Gy5pcFMszJMXJtagkt2AjTxTkF',
     clientSecret: 'OPrt8WfF7tKHV7ufdqhqfO8SgOIYAofqQPT6jqK9S2tqsDghL4G0tvgMbRcFmVSM',
     accessTokenUri: 'https://cloud.vchrist.at/index.php/apps/oauth2/api/v1/token',
