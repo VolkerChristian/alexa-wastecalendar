@@ -71,5 +71,6 @@ function getNCUser(oc_user, cb) {
 
 module.exports = {
     nextcloudAuth,
+    refreshUser,
     getNCUser
 };

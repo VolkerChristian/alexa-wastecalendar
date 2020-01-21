@@ -3,6 +3,7 @@
 
 var mysql = require('mysql');
 var request = require('request');
+var util = require('util');
 
 var _db;
 
@@ -76,6 +77,7 @@ function queryUser(oc_userid, cb) {
         if (err) {
             return cb(err, null);
         } else {
+            console.log(result.length + ' user found [' + result.map(row => row.oc_userid).toString() + ']');
             return cb(null, result);
         }
     });
@@ -86,14 +88,14 @@ function queryAmzUser(oc_userid, amz_skillid, cb) {
 
     console.log('AMZ: Looking for access-token for skill \'' + amz_skillid + '\' and user \'' + oc_userid + '\'');
 
-    db().query(sql, [oc_userid, amz_skillid], function (err, result) {
+    _db.query(sql, [oc_userid, amz_skillid], function (err, result) {
         cb(err, result);
     });
 }
 
 function promiseQueryAmzUser(amz_skillid, oc_userid) {
     return new Promise(function (reslove, reject) {
-        queryAmzUser(oc_userid, amz_skillid, function(err, result) {
+        queryAmzUser(oc_userid, amz_skillid, function (err, result) {
             if (err) {
                 console.log('Error: ' + err);
                 reject(err);
@@ -130,7 +132,7 @@ function proactiveEndpointTokenUpdate(amzSkillId, bodyJson, cb) {
 
     var sql = 'UPDATE wastecalendar.amz_endpoint SET ? WHERE ?';
 
-    db().query(sql, [amzUpdateToken, amzUpdateTokenCond], function (err, updateResult) {
+    _db.query(sql, [amzUpdateToken, amzUpdateTokenCond], function (err, updateResult) {
         if (!err) {
             console.log(updateResult.affectedRows + ' records updated ');
             cb(err, {
@@ -195,7 +197,7 @@ function proactiveEndpointTokenInsert(amzSkillId, bodyJson, cb) {
 
     var sql = 'INSERT INTO wastecalendar.amz_endpoint SET ?';
 
-    db().query(sql, amzInsertToken, function (err, result) {
+    _db.query(sql, amzInsertToken, function (err, result) {
         if (!err) {
             console.log(result.affectedRows + ' records inserted ');
         }
@@ -254,6 +256,26 @@ function promiseAmzEndpointTokenInsert(amzSkillId) {
     });
 }
 
+function insertUser(user, cb) {
+    console.log('AUTH: Create account for user ' + user.data.user_id);
+
+    var sql = 'INSERT INTO wastecalendar.oc_user SET ?';
+
+    var ocUser = {
+        oc_userid: user.data.user_id,
+        oc_accessToken: user.accessToken,
+        oc_refreshtoken: user.refreshToken,
+        oc_expires: user.expires
+    };
+
+    _db.query(sql, ocUser, function (err, result) {
+        if (!err) {
+            console.log(result.affectedRows + ' record inserted ' + util.inspect(result));
+        }
+        return cb(err);
+    });
+}
+
 function updateUserToken(user, cb) {
     var updatedToken = [
         // new values
@@ -279,11 +301,24 @@ function updateUserToken(user, cb) {
     });
 }
 
+function deleteUser(user_id, cb) {
+    var sql = `DELETE FROM wastecalendar.oc_user WHERE oc_userid = ${_db.escape(user_id)}`;
+
+    _db.query(sql, function (err, result) {
+        if (!err) {
+            console.log(result.affectedRows + ' record updated');
+        }
+        cb(err);
+    });
+}
+
 module.exports = {
     db,
     queryUser,
     promiseQueryAmzUser,
     promiseAmzEndpointTokenUpdate,
     promiseAmzEndpointTokenInsert,
+    insertUser,
+    deleteUser,
     updateUserToken
 };
