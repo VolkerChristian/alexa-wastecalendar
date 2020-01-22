@@ -4,9 +4,9 @@
 
 const fs = require('fs');
 
-var handler;
+var skill;
 if (fs.existsSync(__dirname + '/lambda.js')) {
-    handler = require(__dirname + '/lambda').handler;
+    skill = require(__dirname + '/lambda').handler;
 }
 
 var init;
@@ -20,8 +20,8 @@ if (fs.existsSync(__dirname + '/public.js')) {
 }
 
 module.exports = {
-    handler: handler,
-    handlerPath: '/handler',
+    skill: skill,
+    skillPath: '/handler',
     init: init,
     router: router,
     endpointPath: '/wastereminder',
