@@ -113,7 +113,6 @@ const ErrorHandler = {
 
 const ProactiveEventHandler = {
     canHandle(handlerInput) {
-        //        console.log(handlerInput);
         return handlerInput.requestEnvelope.request.type === 'AlexaSkillEvent.ProactiveSubscriptionChanged';
     },
     handle(handlerInput) {
@@ -154,9 +153,6 @@ const AccountLinkedEventHandler = {
         };
         request(options, function (error, response) {
             if (error) throw new Error(error);
-            // Todo: Check if user exists ... 
-            // Todo: Check if user exists ... 
-            // Todo: Check if user exists ... 
             var oc_data = JSON.parse(response.body);
             console.log('OC Response: ' + JSON.stringify(oc_data, null, 4));
 
@@ -230,8 +226,7 @@ const SkillDisabledEventHandler = {
 // The SkillBuilder acts as the entry point for your skill, routing all request and response
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
-var customSkillBuilder = Alexa.SkillBuilders.custom();
-exports.handler = customSkillBuilder
+exports.skill = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
         HelloWorldIntentHandler,
@@ -247,4 +242,3 @@ exports.handler = customSkillBuilder
     .addErrorHandlers(ErrorHandler)
     .withSkillId('amzn1.ask.skill.5119403b-f6c6-45f8-bd7e-87787e6f5da2')
     .create();
-    

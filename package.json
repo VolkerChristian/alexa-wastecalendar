@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "ask-sdk-core": "^2.7.0",
+    "ask-sdk-express-adapter": "^2.0.0",
     "ask-sdk-model": "^1.25.1",
     "client-oauth2": "^4.2.5",
     "cookie-parser": "^1.4.4",
