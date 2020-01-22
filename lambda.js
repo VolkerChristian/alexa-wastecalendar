@@ -247,4 +247,4 @@ exports.handler = customSkillBuilder
     .addErrorHandlers(ErrorHandler)
     .withSkillId('amzn1.ask.skill.5119403b-f6c6-45f8-bd7e-87787e6f5da2')
     .create();
-console.log(JSON.stringify(customSkillBuilder.getSkillConfiguration().apiClient, null, 4);
+    
