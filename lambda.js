@@ -240,5 +240,3 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addErrorHandlers(
     ErrorHandler)
     .lambda();
-
-// exports.endpointPath = '/smart';
