@@ -26,19 +26,21 @@ const LaunchRequestHandler = {
 };
 const HelloWorldIntentHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
     },
     handle(handlerInput) {
         const speakOutput = 'Hello World!';
         return handlerInput.responseBuilder
             .speak(speakOutput)
-        //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
-        .getResponse();
+            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .getResponse();
     }
 };
 const HelpIntentHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
         const speakOutput = 'You can say hello to me! How can I help?';
@@ -51,7 +53,9 @@ const HelpIntentHandler = {
 };
 const CancelAndStopIntentHandler = {
     canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent' || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' &&
+            (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent' ||
+                Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
         const speakOutput = 'Goodbye!';
@@ -84,8 +88,8 @@ const IntentReflectorHandler = {
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
-        //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
-        .getResponse();
+            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .getResponse();
     }
 };
 
@@ -117,10 +121,10 @@ const ProactiveEventHandler = {
         console.log('AWS User ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('Permissions' + (typeof handlerInput.requestEnvelope.request.body !== 'undefined') ? 'JA' : 'NEIN');
-        
+
         var sql = `UPDATE wastecalendar.amz_user SET amz_permissions = ${(typeof handlerInput.requestEnvelope.request.body !== 'undefined') ? 1 : 0} WHERE amz_userid = ${db().escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
         console.log('SQL: ' + sql);
-        db().query(sql, function(err, result) {
+        db().query(sql, function (err, result) {
             if (err) {
                 console.error(err.stack);
             } else {
@@ -148,12 +152,14 @@ const AccountLinkedEventHandler = {
                 'Authorization': 'Bearer ' + handlerInput.requestEnvelope.context.System.user.accessToken
             }
         };
-        request(options, function(error, response) {
+        request(options, function (error, response) {
             if (error) throw new Error(error);
-// Todo: Check if user exists ... 
+            // Todo: Check if user exists ... 
+            // Todo: Check if user exists ... 
+            // Todo: Check if user exists ... 
             var oc_data = JSON.parse(response.body);
             console.log('OC Response: ' + JSON.stringify(oc_data, null, 4));
-                    
+
             var sql = `UPDATE wastecalendar.amz_user SET oc_userid = ${db().escape(oc_data.ocs.data.id)}, amz_accountlinked = 1 WHERE amz_userid = ${db().escape(handlerInput.requestEnvelope.context.System.user.userId)}`;
             console.log('SQL: ' + sql);
             db().query(sql, function (err, result) {
@@ -175,7 +181,7 @@ const SkillEnabledEventHandler = {
         console.log('ALL AlexaSkillEvent.SkillEnabled ' + JSON.stringify(handlerInput, null, 4));
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
-        
+
         var sql = `INSERT INTO wastecalendar.amz_user (amz_skillid, amz_userid, amz_apiendpoint, amz_apiaccesstoken) VALUES (
             ${db().escape(handlerInput.requestEnvelope.context.System.application.applicationId)},
             ${db().escape(handlerInput.requestEnvelope.context.System.user.userId)},
@@ -183,7 +189,7 @@ const SkillEnabledEventHandler = {
             ${db().escape(handlerInput.requestEnvelope.context.System.apiAccessToken)}
         )`;
         console.log('SQL: ' + sql);
-        db().query(sql, function(err, result) {
+        db().query(sql, function (err, result) {
             if (err) {
                 console.error(err.stack);
             } else {
@@ -203,14 +209,14 @@ const SkillDisabledEventHandler = {
         console.log('AWS UserID ' + handlerInput.requestEnvelope.context.System.user.userId);
         console.log('API Endpoint ' + handlerInput.requestEnvelope.context.System.apiEndpoint);
         console.log('Persistence State ' + handlerInput.requestEnvelope.request.body.userInformationPersistenceStatus);
-        
+
         var sql = `DELETE FROM wastecalendar.amz_user WHERE amz_userid = ${
                 db().escape(handlerInput.requestEnvelope.context.System.user.userId)
             } AND amz_skillid = ${
                 db().escape(handlerInput.requestEnvelope.context.System.application.applicationId)
             }`;
         console.log('SQL: ' + sql);
-        db().query(sql, function(err, result) {
+        db().query(sql, function (err, result) {
             if (err) {
                 console.error(err.stack);
             } else {
@@ -224,19 +230,21 @@ const SkillDisabledEventHandler = {
 // The SkillBuilder acts as the entry point for your skill, routing all request and response
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
-exports.handler = Alexa.SkillBuilders.custom()
+var customSkillBuilder = Alexa.SkillBuilders.custom();
+exports.handler = customSkillBuilder
     .addRequestHandlers(
-    LaunchRequestHandler,
-    HelloWorldIntentHandler,
-    HelpIntentHandler,
-    CancelAndStopIntentHandler,
-    ProactiveEventHandler,
-    AccountLinkedEventHandler,
-    SessionEndedRequestHandler,
-    SkillEnabledEventHandler,
-    SkillDisabledEventHandler,
-    IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
-)
-    .addErrorHandlers(
-    ErrorHandler)
+        LaunchRequestHandler,
+        HelloWorldIntentHandler,
+        HelpIntentHandler,
+        CancelAndStopIntentHandler,
+        ProactiveEventHandler,
+        AccountLinkedEventHandler,
+        SessionEndedRequestHandler,
+        SkillEnabledEventHandler,
+        SkillDisabledEventHandler,
+        IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+    )
+    .addErrorHandlers(ErrorHandler)
+    .withSkillId('amzn1.ask.skill.5119403b-f6c6-45f8-bd7e-87787e6f5da2')
     .create();
+console.log(JSON.stringify(customSkillBuilder.getSkillConfiguration().apiClient, null, 4);
