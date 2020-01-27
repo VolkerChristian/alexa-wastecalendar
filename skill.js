@@ -3,10 +3,13 @@
 'use strict';
 
 const fs = require('fs');
+const {
+    ExpressAdapter
+} = require('ask-sdk-express-adapter');
 
-var handler;
+var skill;
 if (fs.existsSync(__dirname + '/lambda.js')) {
-    handler = require(__dirname + '/lambda').handler;
+    skill = require(__dirname + '/lambda').skill;
 }
 
 var init;
@@ -20,8 +23,8 @@ if (fs.existsSync(__dirname + '/public.js')) {
 }
 
 module.exports = {
-    handler: handler,
-    handlerPath: '/handler',
+    handlers: new ExpressAdapter(skill, true, true).getRequestHandlers(),
+    skillPath: '/handler',
     init: init,
     router: router,
     endpointPath: '/wastereminder',

@@ -7,198 +7,140 @@
 
 const express = require('express');
 var util = require('util');
-var request = require('request');
-var mysql = require('mysql');
-var nextcloudAuth = require(__dirname + '/ncoauth2');
-
-var db;
-
-function handleDisconnect() {
-    db = mysql.createConnection({
-        //        host: 'proliant.home.vchrist.at',
-        host: '192.168.1.3',
-        user: 'wastecalendar',
-        password: '!!!SoMaSi01!!!'
-    });
-
-    db.connect(function onConnect(err) {
-        if (err) {
-            console.log('error when connecting to db:', err);
-            setTimeout(handleDisconnect, 1000);
-        } else {
-            console.log('MySQL Connected!');
-        }
-    });
-
-    db.origQuery = db.query;
-
-    db.query = function (sql, values, cb) {
-        console.log('Query start: ' + sql);
-        if (!cb) {
-            cb = values;
-            values = null;
-        }
-        db.origQuery(sql, values, function (err, result) {
-            console.log('Query end');
-            if (err) {
-                console.error(err.stack);
-                setTimeout(handleDisconnect, 1000);
-            }
-            cb(err, result);
-        });
-    };
-
-    db.on('error', function (error) {
-        console.log('On Error: ' + error);
-        if (!error.fatal) return;
-        if (error.code !== 'PROTOCOL_CONNECTION_LOST' && error.code !== 'PROTOCOL_PACKETS_OUT_OF_ORDER' && error.code !== 'ECONNREFUSED') throw error;
-
-        console.log('> Re-connecting lost MySQL connection: ' + error.stack);
-
-        setTimeout(handleDisconnect, 1000);
-    });
-}
-
-handleDisconnect();
-
-function insertUser(user, cb) {
-    console.log('AUTH: Create account for user ' + user.data.user_id);
-
-    var sql = 'INSERT INTO wastecalendar.oc_user SET ?';
-
-    var ocUser = {
-        oc_userid: user.data.user_id,
-        oc_accessToken: user.accessToken,
-        oc_refreshtoken: user.refreshToken,
-        oc_expires: user.expires
-    };
-
-    db.query(sql, ocUser, function (err, result) {
-        if (!err) {
-            console.log(result.affectedRows + ' record inserted ' + util.inspect(result));
-        }
-        return cb(err, user);
-    });
-}
-
-function refreshUser(user, cb) {
-    console.log('RT: Refreshing token for user ' + user.data.user_id);
-
-    user.refresh().then(function (updatedUser) {
-        console.log('AccessToken: ' + updatedUser.accessToken);
-        console.log('RefreshToken: ' + updatedUser.refreshToken);
-        console.log('Expires: ' + updatedUser.expires);
-
-        var updatedToken = [
-            // new values
-            {
-                oc_accesstoken: updatedUser.accessToken,
-                oc_refreshtoken: updatedUser.refreshToken,
-                oc_expires: updatedUser.expires
-            },
-            // condition
-            {
-                oc_userid: updatedUser.data.user_id
-            }
-        ];
-
-        var sql_UpdateToken = 'UPDATE wastecalendar.oc_user SET ? WHERE ?';
-
-        db.query(sql_UpdateToken, updatedToken, function (err, result) {
-            if (!err) {
-                console.log(result.affectedRows + ' record updated');
-            }
-
-            if (cb) {
-                cb(err, updatedUser);
-            }
-        });
-    });
-}
-
-function insertAndUpdateUser(user, res) {
-    insertUser(user, function (error, user) {
-        if (error) {
-            console.error(error);
-            res.statusCode = 500;
-            res.end();
-            return;
-        }
-        refreshUser(user, function (error, updatedUser) {
-            if (error) {
-                console.error(error);
-                res.statusCode = 500;
-                res.end();
-                return;
-            }
-            return res.send(updatedUser.accessToken);
-        });
-    });
-}
+var uuid = require('uuid/v1');
+var cookieParser = require('cookie-parser');
+var {
+    nextcloudAuth
+} = require(__dirname + '/ncoauth2');
+var {
+    db,
+    queryUser,
+    insertUser,
+    deleteUser
+} = require(__dirname + '/database.js');
 
 var pub = express.Router();
+pub.use(cookieParser());
+
+pub.get('/', function (req, res) {
+    var uri = nextcloudAuth.getLoginUri();
+    res.redirect(uri);
+});
+
+var cookieStore = {};
+
+// Todo: Manage expired cookies
+
+nextcloudAuth.setLoginUri('https://ep.vchrist.at/nodejs/wastereminder/auth/nextcloud');
 
 pub.get('/auth/nextcloud', function (req, res) {
-    if (db.state === 'disconnected') {
+    if (db().state === 'disconnected') {
         return res.status(500).send('No Database connection!\n');
     }
+/*
+    1. Create a cookie and store the stateOpt in the store indext by the cookie.
+    2. Set the cookie in the uri for the request
+    4. Create a state value for the oauth handshake
+    3. Store the state in a state-store indexed by the cooki value
+    4. Set the state in the authorization code grant request to the authorization server
+    5. Set a timeout (10Min) for the cookie
+*/
 
-    var uri = nextcloudAuth.code.getUri();
+    var cookie = uuid();
 
+    res.cookie('grant', cookie, {
+        domain: 'ep.vchrist.at',
+        path: '/nodejs/wastereminder/auth/nextcloud',
+        httpOnly: true,
+        secure: true
+    });
+
+    cookieStore[cookie] = {
+        state: uuid(),
+        date: Date()
+    };
+
+    setTimeout(function (cookie) {
+        console.log('Cookie ' + cookie + ' expired.');
+        delete cookieStore[cookie];
+    }, 600 * 1000, cookie);
+
+    console.log('Response grant-cookie: ' + JSON.stringify(cookie, null, 4));
+    console.log('Response state of grant-cookie: ' + JSON.stringify(cookieStore[cookie].state, null, 4));
+
+    var stateOpt = {
+        state: cookieStore[cookie].state
+    };
+
+    var uri = nextcloudAuth.code.getUri(stateOpt);
     console.log(util.inspect(uri));
     res.redirect(uri);
 });
 
 pub.get('/auth/nextcloud/callback', function (req, res) {
-    if (db.state === 'disconnected') {
+    if (db().state === 'disconnected') {
         return res.status(500).send('No Database connection!\n');
     }
 
-    nextcloudAuth.code.getToken(req.originalUrl).then(function (user) {
-        console.log(user);
-/*
-        var options = {
-            'method': 'GET',
-            'url': 'https://cloud.vchrist.at/ocs/v2.php/cloud/user?format=json',
-            'headers': {
-                'Authorization': 'Bearer ' + user.accessToken
-            }
-        };
+    /*
+        1. Retrieve the cookie from the request
+        2. Look for the stateOpt in the store indext by the cookie
+        3. Remove the cookie from the store
+    */
 
-        request(options, function (error, response) {
-            console.log('Error: ' + error);
-            console.log('Response: ' + response);
-// Todo: Check if user exists ... 
-        });
-*/
-        var sql = `SELECT * FROM wastecalendar.oc_user WHERE oc_userid = ${db.escape(user.data.user_id)}`;
+    var state = cookieStore[req.cookies.grant] ? cookieStore[req.cookies.grant].state : '';
 
-        db.query(sql, function (err, result) {
+    console.log('Request cookie: ' + JSON.stringify(req.cookies, null, 4));
+    console.log('Request state of grant-cookie: ' + JSON.stringify(state));
+
+    var stateOpt = {
+        state: state
+    };
+
+    delete cookieStore[req.cookies.grant];
+
+    res.clearCookie('grant', {
+        domain: 'ep.vchrist.at',
+        path: '/nodejs/wastereminder/auth/nextcloud',
+        httpOnly: true,
+        secure: true,
+        expires: new Date(1)
+    });
+
+    nextcloudAuth.code.getToken(req.originalUrl, stateOpt).then(function (user) {
+        queryUser(user.data.user_id, function (err, result) {
             if (err) {
                 console.error(err.stack);
                 res.statusCode = 500;
-                res.end();
-                return;
-            }
-            console.log(result.length + ' records found ' + util.inspect(result));
-
-            if (result && result.length) {
-                sql = `DELETE FROM wastecalendar.oc_user WHERE oc_userid = ${db.escape(user.data.user_id)}`;
-                db.query(sql, function (err, result) {
+                return res.end();
+            } else if (result && result.length) {
+                deleteUser(user.data.user_id, function (err) {
                     if (err) {
                         console.error(err.stack);
                         res.statusCode = 500;
-                        res.end();
-                        return;
+                        return res.end();
                     }
-                    console.log(result.affectedRows + ' records updated ' + util.inspect(result));
-
-                    insertAndUpdateUser(user, res);
+                    insertUser(user, function(err) {
+                        if (err) {
+                            console.error(err);
+                            return res.status(500).send('Error Updating User in db');
+                        }
+                        return res.send(user.accessToken);
+                    });
                 });
             } else {
-                insertAndUpdateUser(user, res);
+                insertUser(user, function(err) {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send('Error Updating User in db');
+                    }
+                    return res.send(user.accessToken);
+                });
             }
         });
+    }).catch(function (err) {
+        console.error('Auth error: Not authorized');
+        res.status(401).send('Auth error: Not authorized');
     });
 });
 
