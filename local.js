@@ -162,31 +162,27 @@ function init(skill) {
                     console.error(err.stack);
                     res.statusCode = 500;
                     res.end();
-                    return;
-                }
-
-                if (result && result.length) {
+                } else if (result && result.length) {
                     result.forEach(function (oc_user) {
                         console.log('PC: Processing user ' + oc_user.oc_userid);
 
                         getNCUser(oc_user, function (err, user) {
                             if (err) {
                                 console.error(err);
-                                return res.status(500).send(err);
+                                res.status(500).send(err);
                             }
                             processCalendar(user, function (err, body) {
                                 if (err) {
                                     console.error(err);
-                                    return res.status(500).send(err);
+                                    res.status(500).send(err);
                                 }
-                                return res.send(body);
+                                res.send(body);
                             });
 
                         });
                     });
                 } else {
                     res.end();
-                    return;
                 }
             });
         });
