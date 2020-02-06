@@ -179,7 +179,7 @@ function init(skill: any) {
                     result.forEach(function (oc_user) {
                         console.log('PC: Processing user ' + oc_user.oc_userid);
 
-                        getNCUser(function (err, user) {
+                        getNCUser(oc_user, function (err, user) {
                             if (err) {
                                 console.error(err);
                                 return res.status(500).send(err);
