@@ -45,7 +45,7 @@ function handleDisconnect() {
     _db.on('error', function (error) {
         console.log('On Error: ' + error);
         if (!error.fatal) return;
-        if (error.code !== 'PROTOCOL_CONNECTION_LOST' && error.code !== 'PROTOCOL_PACKETS_OUT_OF_ORDER' && error.code !== 'ECONNREFUSED') throw error;
+        if (error.code !== 'PROTOCOL_CONNECTION_LOST' && error.code !== 'PROTOCOL_PACKETS_OUT_OF_ORDER' && error.code !== 'ECONNREFUSED' && error.code !== 'ECONNRESET') throw error;
 
         console.log('> Re-connecting lost MySQL connection: ' + error.stack);
 

@@ -32,6 +32,7 @@ Date.unixTime = function () {
     return new Date().toUnixTime();
 };
 
+/*
 function refreshAmzProactiveEndpointToken(cb) {
     var options = {
         method: 'POST',
@@ -56,6 +57,7 @@ function refreshAmzProactiveEndpointToken(cb) {
         }
     });
 }
+*/
 
 function getAmzProactiveEndpointAccessToken(amz_skillid, oc_userid, cb) {
     var promiseAmzUser = promiseQueryAmzUser(amz_skillid, oc_userid);
